@@ -23,6 +23,7 @@ import { Route as AuthenticatedPortalIndexRouteImport } from './routes/_authenti
 import { Route as AuthenticatedPortalAssignRouteImport } from './routes/_authenticated/portal.assign'
 import { Route as AuthenticatedPortalAttendanceRouteImport } from './routes/_authenticated/portal.attendance'
 import { Route as AuthenticatedPortalAuditRouteImport } from './routes/_authenticated/portal.audit'
+import { Route as AuthenticatedPortalComplaintsRouteImport } from './routes/_authenticated/portal.complaints'
 import { Route as AuthenticatedPortalEngagementRouteImport } from './routes/_authenticated/portal.engagement'
 import { Route as AuthenticatedPortalFeedbackRouteImport } from './routes/_authenticated/portal.feedback'
 import { Route as AuthenticatedPortalInterventionsRouteImport } from './routes/_authenticated/portal.interventions'
@@ -30,6 +31,7 @@ import { Route as AuthenticatedPortalLearningRouteImport } from './routes/_authe
 import { Route as AuthenticatedPortalLmsRouteImport } from './routes/_authenticated/portal.lms'
 import { Route as AuthenticatedPortalMessagesRouteImport } from './routes/_authenticated/portal.messages'
 import { Route as AuthenticatedPortalMonitorRouteImport } from './routes/_authenticated/portal.monitor'
+import { Route as AuthenticatedPortalNotificationsRouteImport } from './routes/_authenticated/portal.notifications'
 import { Route as AuthenticatedPortalPeopleRouteImport } from './routes/_authenticated/portal.people'
 import { Route as AuthenticatedPortalPlacementRouteImport } from './routes/_authenticated/portal.placement'
 import { Route as AuthenticatedPortalProfileRouteImport } from './routes/_authenticated/portal.profile'
@@ -115,6 +117,12 @@ const AuthenticatedPortalAuditRoute =
     path: '/audit',
     getParentRoute: () => AuthenticatedPortalRoute,
   } as any)
+const AuthenticatedPortalComplaintsRoute =
+  AuthenticatedPortalComplaintsRouteImport.update({
+    id: '/complaints',
+    path: '/complaints',
+    getParentRoute: () => AuthenticatedPortalRoute,
+  } as any)
 const AuthenticatedPortalEngagementRoute =
   AuthenticatedPortalEngagementRouteImport.update({
     id: '/engagement',
@@ -154,6 +162,12 @@ const AuthenticatedPortalMonitorRoute =
   AuthenticatedPortalMonitorRouteImport.update({
     id: '/monitor',
     path: '/monitor',
+    getParentRoute: () => AuthenticatedPortalRoute,
+  } as any)
+const AuthenticatedPortalNotificationsRoute =
+  AuthenticatedPortalNotificationsRouteImport.update({
+    id: '/notifications',
+    path: '/notifications',
     getParentRoute: () => AuthenticatedPortalRoute,
   } as any)
 const AuthenticatedPortalPeopleRoute =
@@ -235,6 +249,7 @@ export interface FileRoutesByFullPath {
   '/portal/assign': typeof AuthenticatedPortalAssignRoute
   '/portal/attendance': typeof AuthenticatedPortalAttendanceRoute
   '/portal/audit': typeof AuthenticatedPortalAuditRoute
+  '/portal/complaints': typeof AuthenticatedPortalComplaintsRoute
   '/portal/engagement': typeof AuthenticatedPortalEngagementRoute
   '/portal/feedback': typeof AuthenticatedPortalFeedbackRoute
   '/portal/interventions': typeof AuthenticatedPortalInterventionsRoute
@@ -242,6 +257,7 @@ export interface FileRoutesByFullPath {
   '/portal/lms': typeof AuthenticatedPortalLmsRoute
   '/portal/messages': typeof AuthenticatedPortalMessagesRoute
   '/portal/monitor': typeof AuthenticatedPortalMonitorRoute
+  '/portal/notifications': typeof AuthenticatedPortalNotificationsRoute
   '/portal/people': typeof AuthenticatedPortalPeopleRoute
   '/portal/placement': typeof AuthenticatedPortalPlacementRoute
   '/portal/profile': typeof AuthenticatedPortalProfileRoute
@@ -267,6 +283,7 @@ export interface FileRoutesByTo {
   '/portal/assign': typeof AuthenticatedPortalAssignRoute
   '/portal/attendance': typeof AuthenticatedPortalAttendanceRoute
   '/portal/audit': typeof AuthenticatedPortalAuditRoute
+  '/portal/complaints': typeof AuthenticatedPortalComplaintsRoute
   '/portal/engagement': typeof AuthenticatedPortalEngagementRoute
   '/portal/feedback': typeof AuthenticatedPortalFeedbackRoute
   '/portal/interventions': typeof AuthenticatedPortalInterventionsRoute
@@ -274,6 +291,7 @@ export interface FileRoutesByTo {
   '/portal/lms': typeof AuthenticatedPortalLmsRoute
   '/portal/messages': typeof AuthenticatedPortalMessagesRoute
   '/portal/monitor': typeof AuthenticatedPortalMonitorRoute
+  '/portal/notifications': typeof AuthenticatedPortalNotificationsRoute
   '/portal/people': typeof AuthenticatedPortalPeopleRoute
   '/portal/placement': typeof AuthenticatedPortalPlacementRoute
   '/portal/profile': typeof AuthenticatedPortalProfileRoute
@@ -302,6 +320,7 @@ export interface FileRoutesById {
   '/_authenticated/portal/assign': typeof AuthenticatedPortalAssignRoute
   '/_authenticated/portal/attendance': typeof AuthenticatedPortalAttendanceRoute
   '/_authenticated/portal/audit': typeof AuthenticatedPortalAuditRoute
+  '/_authenticated/portal/complaints': typeof AuthenticatedPortalComplaintsRoute
   '/_authenticated/portal/engagement': typeof AuthenticatedPortalEngagementRoute
   '/_authenticated/portal/feedback': typeof AuthenticatedPortalFeedbackRoute
   '/_authenticated/portal/interventions': typeof AuthenticatedPortalInterventionsRoute
@@ -309,6 +328,7 @@ export interface FileRoutesById {
   '/_authenticated/portal/lms': typeof AuthenticatedPortalLmsRoute
   '/_authenticated/portal/messages': typeof AuthenticatedPortalMessagesRoute
   '/_authenticated/portal/monitor': typeof AuthenticatedPortalMonitorRoute
+  '/_authenticated/portal/notifications': typeof AuthenticatedPortalNotificationsRoute
   '/_authenticated/portal/people': typeof AuthenticatedPortalPeopleRoute
   '/_authenticated/portal/placement': typeof AuthenticatedPortalPlacementRoute
   '/_authenticated/portal/profile': typeof AuthenticatedPortalProfileRoute
@@ -337,6 +357,7 @@ export interface FileRouteTypes {
     | '/portal/assign'
     | '/portal/attendance'
     | '/portal/audit'
+    | '/portal/complaints'
     | '/portal/engagement'
     | '/portal/feedback'
     | '/portal/interventions'
@@ -344,6 +365,7 @@ export interface FileRouteTypes {
     | '/portal/lms'
     | '/portal/messages'
     | '/portal/monitor'
+    | '/portal/notifications'
     | '/portal/people'
     | '/portal/placement'
     | '/portal/profile'
@@ -369,6 +391,7 @@ export interface FileRouteTypes {
     | '/portal/assign'
     | '/portal/attendance'
     | '/portal/audit'
+    | '/portal/complaints'
     | '/portal/engagement'
     | '/portal/feedback'
     | '/portal/interventions'
@@ -376,6 +399,7 @@ export interface FileRouteTypes {
     | '/portal/lms'
     | '/portal/messages'
     | '/portal/monitor'
+    | '/portal/notifications'
     | '/portal/people'
     | '/portal/placement'
     | '/portal/profile'
@@ -403,6 +427,7 @@ export interface FileRouteTypes {
     | '/_authenticated/portal/assign'
     | '/_authenticated/portal/attendance'
     | '/_authenticated/portal/audit'
+    | '/_authenticated/portal/complaints'
     | '/_authenticated/portal/engagement'
     | '/_authenticated/portal/feedback'
     | '/_authenticated/portal/interventions'
@@ -410,6 +435,7 @@ export interface FileRouteTypes {
     | '/_authenticated/portal/lms'
     | '/_authenticated/portal/messages'
     | '/_authenticated/portal/monitor'
+    | '/_authenticated/portal/notifications'
     | '/_authenticated/portal/people'
     | '/_authenticated/portal/placement'
     | '/_authenticated/portal/profile'
@@ -537,6 +563,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedPortalAuditRouteImport
       parentRoute: typeof AuthenticatedPortalRoute
     }
+    '/_authenticated/portal/complaints': {
+      id: '/_authenticated/portal/complaints'
+      path: '/complaints'
+      fullPath: '/portal/complaints'
+      preLoaderRoute: typeof AuthenticatedPortalComplaintsRouteImport
+      parentRoute: typeof AuthenticatedPortalRoute
+    }
     '/_authenticated/portal/engagement': {
       id: '/_authenticated/portal/engagement'
       path: '/engagement'
@@ -584,6 +617,13 @@ declare module '@tanstack/react-router' {
       path: '/monitor'
       fullPath: '/portal/monitor'
       preLoaderRoute: typeof AuthenticatedPortalMonitorRouteImport
+      parentRoute: typeof AuthenticatedPortalRoute
+    }
+    '/_authenticated/portal/notifications': {
+      id: '/_authenticated/portal/notifications'
+      path: '/notifications'
+      fullPath: '/portal/notifications'
+      preLoaderRoute: typeof AuthenticatedPortalNotificationsRouteImport
       parentRoute: typeof AuthenticatedPortalRoute
     }
     '/_authenticated/portal/people': {
@@ -670,6 +710,7 @@ interface AuthenticatedPortalRouteChildren {
   AuthenticatedPortalAssignRoute: typeof AuthenticatedPortalAssignRoute
   AuthenticatedPortalAttendanceRoute: typeof AuthenticatedPortalAttendanceRoute
   AuthenticatedPortalAuditRoute: typeof AuthenticatedPortalAuditRoute
+  AuthenticatedPortalComplaintsRoute: typeof AuthenticatedPortalComplaintsRoute
   AuthenticatedPortalEngagementRoute: typeof AuthenticatedPortalEngagementRoute
   AuthenticatedPortalFeedbackRoute: typeof AuthenticatedPortalFeedbackRoute
   AuthenticatedPortalInterventionsRoute: typeof AuthenticatedPortalInterventionsRoute
@@ -677,6 +718,7 @@ interface AuthenticatedPortalRouteChildren {
   AuthenticatedPortalLmsRoute: typeof AuthenticatedPortalLmsRoute
   AuthenticatedPortalMessagesRoute: typeof AuthenticatedPortalMessagesRoute
   AuthenticatedPortalMonitorRoute: typeof AuthenticatedPortalMonitorRoute
+  AuthenticatedPortalNotificationsRoute: typeof AuthenticatedPortalNotificationsRoute
   AuthenticatedPortalPeopleRoute: typeof AuthenticatedPortalPeopleRoute
   AuthenticatedPortalPlacementRoute: typeof AuthenticatedPortalPlacementRoute
   AuthenticatedPortalProfileRoute: typeof AuthenticatedPortalProfileRoute
@@ -694,6 +736,7 @@ const AuthenticatedPortalRouteChildren: AuthenticatedPortalRouteChildren = {
   AuthenticatedPortalAssignRoute: AuthenticatedPortalAssignRoute,
   AuthenticatedPortalAttendanceRoute: AuthenticatedPortalAttendanceRoute,
   AuthenticatedPortalAuditRoute: AuthenticatedPortalAuditRoute,
+  AuthenticatedPortalComplaintsRoute: AuthenticatedPortalComplaintsRoute,
   AuthenticatedPortalEngagementRoute: AuthenticatedPortalEngagementRoute,
   AuthenticatedPortalFeedbackRoute: AuthenticatedPortalFeedbackRoute,
   AuthenticatedPortalInterventionsRoute: AuthenticatedPortalInterventionsRoute,
@@ -701,6 +744,7 @@ const AuthenticatedPortalRouteChildren: AuthenticatedPortalRouteChildren = {
   AuthenticatedPortalLmsRoute: AuthenticatedPortalLmsRoute,
   AuthenticatedPortalMessagesRoute: AuthenticatedPortalMessagesRoute,
   AuthenticatedPortalMonitorRoute: AuthenticatedPortalMonitorRoute,
+  AuthenticatedPortalNotificationsRoute: AuthenticatedPortalNotificationsRoute,
   AuthenticatedPortalPeopleRoute: AuthenticatedPortalPeopleRoute,
   AuthenticatedPortalPlacementRoute: AuthenticatedPortalPlacementRoute,
   AuthenticatedPortalProfileRoute: AuthenticatedPortalProfileRoute,

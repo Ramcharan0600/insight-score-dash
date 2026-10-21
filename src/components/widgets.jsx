@@ -1,11 +1,15 @@
+import { useEffect, useState } from "react";
 import {
   Award,
   BarChart3,
   BookOpen,
   Briefcase,
   CalendarCheck,
+  CircleCheck,
+  Eye,
   Gauge,
   GraduationCap,
+  OctagonAlert,
   TriangleAlert,
   UserCheck,
   Users,
@@ -71,6 +75,13 @@ export function StatCard({ label, value, sub, tone }) {
     </div>
   );
 }
+const BAND_STYLE = {
+  "On Track": ["bg-success/15 text-success", CircleCheck],
+  Monitor: ["bg-info/15 text-info", Eye],
+  "Needs Attention": ["bg-warning/15 text-warning", TriangleAlert],
+  "High Priority": ["bg-destructive/15 text-destructive", OctagonAlert],
+};
+// Risk is always shown as words plus an icon, never by colour alone.
 export function BandBadge({ score }) {
   if (score === null)
     return (
@@ -79,20 +90,29 @@ export function BandBadge({ score }) {
       </span>
     );
   const band = riskBand(score);
-  const cls =
-    band === "On Track"
-      ? "bg-success/15 text-success"
-      : band === "Monitor"
-        ? "bg-info/15 text-info"
-        : band === "Needs Attention"
-          ? "bg-warning/15 text-warning"
-          : "bg-destructive/15 text-destructive";
-  return <span className={cn("rounded-full px-2.5 py-0.5 text-xs font-medium", cls)}>{band}</span>;
+  const [cls, Icon] = BAND_STYLE[band];
+  return (
+    <span
+      className={cn(
+        "inline-flex items-center gap-1 rounded-full px-2.5 py-0.5 text-xs font-semibold",
+        cls,
+      )}
+    >
+      <Icon className="size-3" aria-hidden />
+      {band}
+    </span>
+  );
 }
+/** The score ring draws itself on first paint; reduced-motion users get it without animation. */
 export function ScoreRing({ score, size = 96 }) {
   const r = (size - 12) / 2;
   const circ = 2 * Math.PI * r;
-  const pct = score ?? 0;
+  const target = score ?? 0;
+  const [shown, setShown] = useState(0);
+  useEffect(() => {
+    const id = requestAnimationFrame(() => setShown(target));
+    return () => cancelAnimationFrame(id);
+  }, [target]);
   const color =
     score === null
       ? "var(--muted)"
@@ -105,16 +125,22 @@ export function ScoreRing({ score, size = 96 }) {
             : "var(--destructive)";
   return (
     <div
+      role="img"
+      aria-label={
+        score === null
+          ? "Success Score not available"
+          : `Success Score ${Math.round(score)} out of 100`
+      }
       className="relative inline-flex items-center justify-center"
       style={{ width: size, height: size }}
     >
-      <svg width={size} height={size} className="-rotate-90">
+      <svg width={size} height={size} className="-rotate-90" aria-hidden>
         <circle
           cx={size / 2}
           cy={size / 2}
           r={r}
           fill="none"
-          stroke="var(--muted)"
+          stroke="var(--border)"
           strokeWidth={8}
         />
         <circle
@@ -126,10 +152,11 @@ export function ScoreRing({ score, size = 96 }) {
           strokeWidth={8}
           strokeLinecap="round"
           strokeDasharray={circ}
-          strokeDashoffset={circ * (1 - pct / 100)}
+          strokeDashoffset={circ * (1 - shown / 100)}
+          style={{ transition: "stroke-dashoffset 0.9s ease-out" }}
         />
       </svg>
-      <span className="absolute font-display text-xl font-bold">
+      <span className="absolute font-display text-xl font-bold tabular-nums">
         {score === null ? "—" : Math.round(score)}
       </span>
     </div>

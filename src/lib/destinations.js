@@ -39,6 +39,7 @@ export const SEARCH_GROUPS = {
       "Dashboard",
       [
         ["Dashboard", "/portal", "overview home score band alerts"],
+        ["Notifications", "/portal/notifications", "alerts unread bell reminders"],
         ["Campus updates", "/portal/updates", "announcement notice event poster news happening"],
         ["Notices and posters", "/portal/updates", "board circular"],
       ],
@@ -94,6 +95,8 @@ export const SEARCH_GROUPS = {
       "Feedback and Support",
       [
         ["Feedback to my mentor", "/portal/feedback", "message teacher concern note"],
+        ["Confidential complaint", "/portal/feedback", "grievance report private"],
+        ["Rate my satisfaction", "/portal/feedback", "survey rating review"],
         ["Messages from teachers", "/portal/feedback", "inbox mentor"],
         ["Contact support", "/contact", "help query message"],
       ],
@@ -111,6 +114,7 @@ export const SEARCH_GROUPS = {
       "Dashboard",
       [
         ["Dashboard", "/portal", "overview home students at a glance"],
+        ["Notifications", "/portal/notifications", "alerts unread bell reminders"],
         ["Campus updates", "/portal/updates", "announcement notice event poster news"],
         ["Post an update", "/portal/updates", "announce publish notice poster drive"],
       ],
@@ -160,6 +164,7 @@ export const SEARCH_GROUPS = {
       "Dashboard",
       [
         ["Dashboard", "/portal", "overview home campus analytics"],
+        ["Notifications", "/portal/notifications", "alerts unread bell reminders"],
         ["Campus updates", "/portal/updates", "announcement notice event poster news"],
         ["Post an update", "/portal/updates", "announce publish notice poster drive"],
       ],
@@ -201,6 +206,7 @@ export const SEARCH_GROUPS = {
       "Administrative",
       [
         ["Messages and concerns", "/portal/messages", "contact inbox"],
+        ["Confidential complaints", "/portal/complaints", "complaint grievance harassment review"],
         ["Audit log", "/portal/audit", "history changes who"],
       ],
     ],

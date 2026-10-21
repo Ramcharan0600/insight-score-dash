@@ -1,6 +1,7 @@
 import { createFileRoute, Outlet } from "@tanstack/react-router";
 import { LoaderCircle } from "lucide-react";
 import { PortalShell } from "@/components/portal/PortalShell";
+import { ToastProvider } from "@/components/ui-kit";
 import { pageHead } from "@/lib/metadata";
 import { campusOptions } from "@/lib/use-campus";
 
@@ -21,8 +22,10 @@ export const Route = createFileRoute("/_authenticated/portal")({
     </div>
   ),
   component: () => (
-    <PortalShell>
-      <Outlet />
-    </PortalShell>
+    <ToastProvider>
+      <PortalShell>
+        <Outlet />
+      </PortalShell>
+    </ToastProvider>
   ),
 });

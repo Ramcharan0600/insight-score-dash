@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { useQueryClient } from "@tanstack/react-query";
 import {
   Activity,
+  Bell,
   Award,
   BookOpen,
   Brain,
@@ -17,6 +18,7 @@ import {
   MessageSquare,
   Route as RouteIcon,
   ScrollText,
+  ShieldAlert,
   Megaphone,
   Trophy,
   UserCheck,
@@ -31,6 +33,7 @@ import {
 } from "lucide-react";
 import { Brand } from "@/components/PublicLayout";
 import { GlobalSearch } from "@/components/portal/GlobalSearch";
+import { NotificationBell } from "@/components/portal/NotificationBell";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import { CATEGORY, useUpdates } from "@/components/portal/CampusUpdates";
 import {
@@ -50,6 +53,7 @@ import { useCampus } from "@/lib/use-campus";
 export const NAV = {
   student: [
     { to: "/portal", label: "Overview", icon: LayoutDashboard, exact: true },
+    { to: "/portal/notifications", label: "Notifications", icon: Bell },
     { to: "/portal/updates", label: "Campus updates", icon: Megaphone },
     { to: "/portal/profile", label: "Profile", icon: UserRound },
     { to: "/portal/results", label: "Results", icon: Award },
@@ -63,6 +67,7 @@ export const NAV = {
   ],
   faculty: [
     { to: "/portal", label: "Overview", icon: LayoutDashboard, exact: true },
+    { to: "/portal/notifications", label: "Notifications", icon: Bell },
     { to: "/portal/updates", label: "Campus updates", icon: Megaphone },
     { to: "/portal/students", label: "My students", icon: Users },
     { to: "/portal/results", label: "Results", icon: Award },
@@ -78,6 +83,7 @@ export const NAV = {
   ],
   admin: [
     { to: "/portal", label: "Overview", icon: LayoutDashboard, exact: true },
+    { to: "/portal/notifications", label: "Notifications", icon: Bell },
     { to: "/portal/updates", label: "Campus updates", icon: Megaphone },
     { to: "/portal/students", label: "All students", icon: Users },
     { to: "/portal/results", label: "Results", icon: Award },
@@ -94,6 +100,7 @@ export const NAV = {
     { to: "/portal/interventions", label: "Interventions", icon: ClipboardList },
     { to: "/portal/monitor", label: "Attendance & risk", icon: Activity },
     { to: "/portal/messages", label: "Messages", icon: Mail },
+    { to: "/portal/complaints", label: "Complaints", icon: ShieldAlert },
     { to: "/portal/audit", label: "Audit log", icon: ScrollText },
     { to: "/portal/profile", label: "Profile", icon: UserRound },
   ],
@@ -245,6 +252,7 @@ export function PortalShell({ children }) {
           </nav>
           <div className="ml-auto flex items-center gap-3">
             <GlobalSearch role={role} rows={rows} onSignOut={logout} />
+            <NotificationBell />
             <span className="hidden xl:block">
               <ThemeToggle />
             </span>

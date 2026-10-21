@@ -161,7 +161,7 @@ export const CATEGORIES = {
 const mean = (v) => (v.length ? v.reduce((a, c) => a + c, 0) / v.length : null);
 const selectClass = "rounded-md border bg-background p-2 text-sm";
 
-function CategoryBody({ category }) {
+function CategoryBody({ category, embedded = false }) {
   const cfg = CATEGORIES[category];
   const { rows } = useCampus();
   const [year, setYear] = useState(0);
@@ -209,7 +209,7 @@ function CategoryBody({ category }) {
     );
   return (
     <>
-      <PageTitle title={cfg.title} sub={cfg.sub} />
+      {!embedded && <PageTitle title={cfg.title} sub={cfg.sub} />}
       {rows.length === 0 ? (
         <EmptyState title="No students yet" hint="Import students from the Students page." />
       ) : (
@@ -325,10 +325,10 @@ function CategoryBody({ category }) {
 }
 
 /** Staff page for one category. Students keep their own pages, so this renders only for staff. */
-export function StaffCategory({ category }) {
+export function StaffCategory({ category, embedded = false }) {
   return (
     <RoleGate allow={["faculty", "admin"]}>
-      <CategoryBody category={category} />
+      <CategoryBody category={category} embedded={embedded} />
     </RoleGate>
   );
 }
