@@ -172,6 +172,10 @@ export function LiveLms({ s }) {
         <StatCard label="Lessons completed" value={pct(parts.lessonsPct)} />
         <StatCard label="Assignments submitted" value={pct(parts.assignmentPct)} />
         <StatCard
+          label="Logins per week"
+          value={s.lmsLoginsPerWeek === undefined ? "—" : s.lmsLoginsPerWeek.toFixed(1)}
+        />
+        <StatCard
           label="Pending assignments"
           value={String(pending.length)}
           tone={pending.some((a) => a.daysLeft !== null && a.daysLeft < 0) ? "danger" : "default"}
@@ -300,10 +304,14 @@ export function LivePlacement({ s }) {
   const known = (v) => (v >= 0 ? String(v) : "—");
   return (
     <div className="space-y-4">
-      <div className="grid grid-cols-2 gap-3 md:grid-cols-4">
+      <div className="grid grid-cols-2 gap-3 md:grid-cols-5">
         <StatCard label="Placement readiness" value={pr === null ? "—" : pr.toFixed(0)} />
         <StatCard label="Aptitude" value={known(s.skills.aptitude)} />
         <StatCard label="Coding" value={known(s.skills.coding)} />
+        <StatCard
+          label="Mock interviews"
+          value={s.mockInterviews === undefined ? "—" : String(s.mockInterviews)}
+        />
         <StatCard
           label="Assessments done"
           value={
@@ -345,8 +353,8 @@ export function LivePlacement({ s }) {
         </div>
       </div>
       <p className="text-xs text-muted-foreground">
-        Company drives, mock interviews and resume keyword matching are not connected to this
-        workspace yet, so nothing is shown for them.
+        Company drives and resume keyword matching are not connected to this workspace yet, so
+        nothing is shown for them.
       </p>
     </div>
   );
@@ -471,6 +479,14 @@ function NoteForm({ kind, recordId, onChanged, placeholder, button, withAbout })
 export function LiveFeedback({ s, isOwner, canWriteFaculty, onChanged }) {
   return (
     <div className="space-y-4">
+      <div className="grid grid-cols-2 gap-3 md:grid-cols-3">
+        <StatCard
+          label="Student satisfaction"
+          value={s.satisfaction === undefined ? "—" : `${s.satisfaction.toFixed(1)} / 5`}
+        />
+        <StatCard label="Faculty notes" value={String(s.facultyFeedback.length)} />
+        <StatCard label="Student notes" value={String(s.studentFeedback.length)} />
+      </div>
       <div className={card}>
         <SectionTitle sub="Written by your teachers">Faculty feedback</SectionTitle>
         {s.facultyFeedback.length ? (

@@ -5,6 +5,10 @@ export const studentSchema = z.object({
   branch: z.string().trim().min(1).max(30),
   semester: z.number().int().min(1).max(8),
   gradYear: z.number().int().min(2020).max(2035),
+  // Optional grouping details from the CSV import; older records simply have none.
+  gender: z.string().trim().max(20).default(""),
+  course: z.string().trim().max(60).default(""),
+  section: z.string().trim().max(20).default(""),
   mentorId: z.string(),
   cgpa: z.number().min(0).max(10),
   semesterGrades: z.array(z.number().min(0).max(10)),
@@ -59,6 +63,11 @@ export const studentSchema = z.object({
     }),
   ),
   resumeCompleteness: z.number().min(-1).max(100),
+  // Optional indicators; left out (undefined) means "not recorded", never zero.
+  mockInterviews: z.number().int().min(0).optional(),
+  hasEngagementData: z.boolean().optional(),
+  lmsLoginsPerWeek: z.number().min(0).max(100).optional(),
+  satisfaction: z.number().min(1).max(5).optional(),
   targetRoles: z.array(z.string()),
   assessmentsCompleted: z.number().int().min(0),
   assessmentsRequired: z.number().int().min(0),

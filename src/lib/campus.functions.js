@@ -4,6 +4,7 @@ import { requireAuth } from "@/backend/auth-middleware";
 import { hashPassword, limitByIp } from "@/backend/auth.server";
 import { randomBytes } from "node:crypto";
 import { query, withTransaction } from "@/backend/db.server";
+import { backfillStudentRecords } from "@/backend/student-record.server";
 import { studentSchema } from "@/lib/student-validation";
 import { emptyStudent } from "@/lib/student-defaults";
 // Which student records a user may see: their own, those assigned to them as faculty, or all as admin.
@@ -15,6 +16,7 @@ export const loadCampus = createServerFn({ method: "POST" })
   .handler(async ({ context }) => {
     const { user } = context;
     const [isFaculty, isAdmin] = flags(user.roles);
+    if (isAdmin) await withTransaction((db) => backfillStudentRecords(db));
     const [me, records, interventions] = await Promise.all([
       query(
         "SELECT id, email, display_name, phone, address, bio, linkedin_url, github_url, created_at FROM users WHERE id = $1",

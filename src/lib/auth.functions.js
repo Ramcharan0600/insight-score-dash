@@ -13,6 +13,7 @@ import { checkCaptcha, createCaptcha } from "@/backend/captcha.server";
 import { appUrl, mailReady, sendMail } from "@/backend/mail.server";
 import { requireAuth } from "@/backend/auth-middleware";
 import { query, withTransaction } from "@/backend/db.server";
+import { ensureStudentRecord } from "@/backend/student-record.server";
 const email = z.string().trim().toLowerCase().email().max(254);
 const password = z
   .string()
@@ -82,6 +83,8 @@ export const signUp = createServerFn({ method: "POST" })
         );
         user = created.rows[0];
         await db.query("INSERT INTO user_roles(user_id, role) VALUES($1,'student')", [user.id]);
+        if (workspace === "student" && !bootstrapAdmin)
+          await ensureStudentRecord(db, { ...user, email: data.email });
       }
       const held = (
         await db.query("SELECT role::text AS role FROM user_roles WHERE user_id = $1", [user.id])
@@ -242,7 +245,7 @@ export const resetPasswordWithToken = createServerFn({ method: "POST" })
   });
 
 export const signOut = createServerFn({ method: "POST" }).handler(async () => {
-  endSession();
+  await endSession();
   return { ok: true };
 });
 export const changePassword = createServerFn({ method: "POST" })

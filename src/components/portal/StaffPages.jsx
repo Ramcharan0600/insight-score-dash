@@ -21,13 +21,36 @@ const STAFF = ["faculty", "admin"];
 
 // ---------------------------------------------------------------- students
 export function StudentsPage() {
-  const { rows, isAdmin } = useCampus();
+  const { rows, isAdmin, refresh } = useCampus();
+  const [importing, setImporting] = useState(false);
   return (
     <RoleGate allow={STAFF}>
       <PageTitle
         title={isAdmin ? "All students" : "My students"}
-        sub={isAdmin ? "Every student on campus" : "Students assigned to you"}
+        sub={
+          isAdmin
+            ? "Every student on campus, by year, course and section"
+            : "Students assigned to you"
+        }
       />
+      {isAdmin && (
+        <div className="mb-4">
+          <Button type="button" variant="outline" onClick={() => setImporting((v) => !v)}>
+            {importing ? "Close import" : "Import students from CSV"}
+          </Button>
+          {importing && (
+            <div className={`${card} mt-3`}>
+              <AdminTools
+                tabs={["csv"]}
+                students={rows.map((r) => r.s)}
+                records={rows.map((r) => r.rec)}
+                selectedId=""
+                onSaved={refresh}
+              />
+            </div>
+          )}
+        </div>
+      )}
       {rows.length === 0 ? (
         <EmptyState
           title={isAdmin ? "No students yet" : "No students assigned to you yet"}

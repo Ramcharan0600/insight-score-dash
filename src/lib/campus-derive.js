@@ -3,6 +3,16 @@ import { liveNotifications } from "./live-profile";
 import { componentScores, lmsCompletion, studentAttendancePct, successScore } from "./scoring";
 import { segmentOf } from "./student-extras";
 import { studentSchema } from "./student-validation";
+import { DEFAULT_WEIGHTS } from "./types";
+
+const COMPONENT_LABELS = {
+  academics: "Academics",
+  attendance: "Attendance",
+  lms: "LMS",
+  engagement: "Engagement",
+  skills: "Skills",
+  placement: "Placement",
+};
 
 // Turns the raw rows from the database into what the portal pages show: one row per student
 // with the score, band, attendance and alert counts already worked out.
@@ -18,6 +28,13 @@ export function buildRows(records, today) {
     const acad = academicRisk(s);
     const place = placementRisk(s);
     const alerts = liveNotifications(s, today).filter((n) => n.tone !== "info");
+    // Explainability: the indicator adding the most points to the score, and the signal adding
+    // the most points to either risk flag.
+    const topComponent = Object.entries(r.components)
+      .filter(([, v]) => v !== null)
+      .map(([k, v]) => ({ k, impact: (v * DEFAULT_WEIGHTS[k]) / 100 }))
+      .sort((a, b) => b.impact - a.impact)[0];
+    const topRisk = [...acad.drivers, ...place.drivers].sort((a, b) => b.points - a.points)[0];
     return [
       {
         rec,
@@ -26,7 +43,13 @@ export function buildRows(records, today) {
         name: s.name,
         branch: s.branch,
         semester: s.semester,
+        year: Math.ceil(s.semester / 2),
+        gender: s.gender,
+        course: s.course,
+        section: s.section,
         score: r.score,
+        topDriver: topComponent ? COMPONENT_LABELS[topComponent.k] : null,
+        riskDriver: topRisk ? topRisk.signal : null,
         band: r.score === null ? null : effectiveBand(r.score, r.band, acad, place),
         cgpa: s.cgpa > 0 ? s.cgpa : null,
         attendance: studentAttendancePct(s),

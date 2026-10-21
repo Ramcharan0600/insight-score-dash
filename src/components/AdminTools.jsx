@@ -749,8 +749,10 @@ export function AdminTools({ students, records, selectedId = "", onSaved, tabs =
         <div className="space-y-4">
           <p className="text-sm text-muted-foreground">
             Add many students from a spreadsheet saved as CSV. Required columns: student_id, name,
-            branch, semester, grad_year, cgpa. Existing student IDs are skipped, never overwritten.
-            Students can be linked to their login afterwards under Connect.
+            branch, semester, grad_year, cgpa. Optional: gender, course, section (these drive the
+            year, course, section and gender views), plus backlogs, attendance_pct and skill scores.
+            Semesters 1–2 are Year 1, up to 7–8 for Year 4. Existing student IDs are skipped, never
+            overwritten. Students can be linked to their login afterwards under Connect.
           </p>
           <div className="flex flex-wrap gap-2">
             <Button

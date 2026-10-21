@@ -15,6 +15,7 @@ import {
   StudentHeader,
 } from "@/components/student-profile/LiveStudentProfile";
 import { Attendance } from "@/components/student-profile/shared";
+import { StaffCategory } from "@/components/portal/CategoryView";
 import { useCampus } from "@/lib/use-campus";
 
 /** Frame for the student-only pages: handles "no record linked yet" in one place. */
@@ -52,6 +53,8 @@ export function LearningPage() {
 }
 
 export function AttendancePage() {
+  const { role } = useCampus();
+  if (role !== "student") return <StaffCategory category="attendance" />;
   return (
     <StudentFrame title="Attendance" sub="Where you stand and how many classes you need">
       {(s) => <Attendance s={s} />}
@@ -60,6 +63,8 @@ export function AttendancePage() {
 }
 
 export function LmsPage() {
+  const { role } = useCampus();
+  if (role !== "student") return <StaffCategory category="lms" />;
   return (
     <StudentFrame title="LMS" sub="Lessons and assignments">
       {(s) => <LiveLms s={s} />}
@@ -68,6 +73,8 @@ export function LmsPage() {
 }
 
 export function SkillsPage() {
+  const { role } = useCampus();
+  if (role !== "student") return <StaffCategory category="skills" />;
   return (
     <StudentFrame title="Skills" sub="Your assessment scores">
       {(s) => <LiveSkills s={s} />}
@@ -102,6 +109,8 @@ export function PlacementPage() {
 }
 
 export function EngagementPage() {
+  const { role } = useCampus();
+  if (role !== "student") return <StaffCategory category="engagement" />;
   return (
     <StudentFrame title="Engagement" sub="Clubs, events, hackathons and certifications">
       {(s) => <LiveEngagement s={s} />}
@@ -110,7 +119,8 @@ export function EngagementPage() {
 }
 
 export function FeedbackPage() {
-  const { refresh } = useCampus();
+  const { refresh, role } = useCampus();
+  if (role !== "student") return <StaffCategory category="feedback" />;
   return (
     <StudentFrame title="Feedback" sub="From your teachers, and what you tell us">
       {(s) => <LiveFeedback s={s} isOwner canWriteFaculty={false} onChanged={refresh} />}

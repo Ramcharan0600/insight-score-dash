@@ -1,12 +1,10 @@
 import { createContext, useCallback, useContext, useEffect, useState } from "react";
 import { useRouter } from "@tanstack/react-router";
 import { useQueryClient } from "@tanstack/react-query";
-import { getSession, signOut } from "@/lib/auth.functions";
+import { getSession } from "@/lib/auth.functions";
 
-// A sign-in lasts only for the page it was made on. Loading or reloading the page ends it:
-// the first thing a freshly loaded page does is clear the session cookie, and every session
-// check waits for that. Moving between pages inside the app does not reload, so it is unaffected.
-export const freshLoad = typeof window === "undefined" ? null : signOut().catch(() => null);
+// A sign-in survives reloads; it ends when the person signs out (the server deletes the session)
+// or when the browser is closed (the cookie has no maxAge).
 const AccountContext = createContext({ user: null, loading: true, refresh: async () => null });
 export function AccountProvider({ children }) {
   const [user, setUser] = useState(null);
@@ -25,8 +23,7 @@ export function AccountProvider({ children }) {
   }, [router, queryClient]);
   useEffect(() => {
     let active = true;
-    Promise.resolve(freshLoad)
-      .then(() => getSession())
+    getSession()
       .catch(() => null)
       .then((next) => {
         if (active) {

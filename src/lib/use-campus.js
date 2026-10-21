@@ -8,6 +8,9 @@ import { todayIso } from "@/lib/live-profile";
 export const campusOptions = queryOptions({
   queryKey: ["private-campus"],
   queryFn: () => loadCampus(),
+  // New sign-ups and edits made by others should appear without a manual reload.
+  staleTime: 0,
+  refetchInterval: 30_000,
 });
 
 /**

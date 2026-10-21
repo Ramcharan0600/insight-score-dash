@@ -24,6 +24,7 @@ function LevelPill({ level, points }) {
   );
 }
 
+const distinct = (rows, key) => [...new Set(rows.map((r) => r[key]).filter(Boolean))].sort();
 const subjectBy = (s, pick) =>
   s.subjects.length ? s.subjects.reduce((a, b) => (pick(b, a) ? b : a)).subject : "—";
 const COMPARE_ROWS = [
@@ -50,6 +51,18 @@ export function StudentTable({ rows, showMentor = false, initialFilter = "" }) {
   const [acad, setAcad] = useState("");
   const [place, setPlace] = useState("");
   const [compare, setCompare] = useState([]);
+  const [year, setYear] = useState(0);
+  const [course, setCourse] = useState("");
+  const [section, setSection] = useState("");
+  const [gender, setGender] = useState("");
+  const courses = useMemo(() => distinct(rows, "course"), [rows]);
+  const sections = useMemo(() => distinct(rows, "section"), [rows]);
+  const genders = useMemo(() => distinct(rows, "gender"), [rows]);
+  const yearCounts = useMemo(() => {
+    const c = {};
+    for (const r of rows) c[r.year] = (c[r.year] ?? 0) + 1;
+    return c;
+  }, [rows]);
   const branches = useMemo(() => [...new Set(rows.map((r) => r.branch))].sort(), [rows]);
   const segments = useMemo(() => [...new Set(rows.map((r) => r.segment))].sort(), [rows]);
   const mentors = useMemo(() => {
@@ -64,6 +77,10 @@ export function StudentTable({ rows, showMentor = false, initialFilter = "" }) {
         if (needle && !`${r.name} ${r.id} ${r.ownerEmail}`.toLowerCase().includes(needle))
           return false;
         if (branch && r.branch !== branch) return false;
+        if (year && r.year !== year) return false;
+        if (course && r.course !== course) return false;
+        if (section && r.section !== section) return false;
+        if (gender && r.gender !== gender) return false;
         if (segment && r.segment !== segment) return false;
         if (acad && r.academicRisk !== acad) return false;
         if (place && r.placementRisk !== place) return false;
@@ -76,15 +93,49 @@ export function StudentTable({ rows, showMentor = false, initialFilter = "" }) {
         return true;
       }),
     );
-  }, [rows, q, band, branch, mentor, segment, acad, place]);
+  }, [rows, q, band, branch, mentor, segment, acad, place, year, course, section, gender]);
   const compared = compare.map((id) => rows.find((r) => r.id === id)).filter(Boolean);
   const classAvg = useMemo(() => {
     const v = rows.map((r) => r.score).filter((x) => x !== null);
     return v.length ? v.reduce((a, c) => a + c, 0) / v.length : null;
   }, [rows]);
+  const filterSelect = (value, set, label, options) =>
+    options.length > 1 && (
+      <select
+        value={value}
+        onChange={(e) => set(e.target.value)}
+        aria-label={`Filter by ${label}`}
+        className={selectClass}
+      >
+        <option value="">All {label}s</option>
+        {options.map((o) => (
+          <option key={o} value={o}>
+            {o}
+          </option>
+        ))}
+      </select>
+    );
   return (
     <div>
+      <div className="mb-3 flex flex-wrap gap-2" role="tablist" aria-label="Year of study">
+        {[0, 1, 2, 3, 4].map((y) => (
+          <Button
+            key={y}
+            type="button"
+            size="sm"
+            role="tab"
+            aria-selected={year === y}
+            variant={year === y ? "default" : "outline"}
+            onClick={() => setYear(y)}
+          >
+            {y === 0 ? `All years (${rows.length})` : `Year ${y} (${yearCounts[y] ?? 0})`}
+          </Button>
+        ))}
+      </div>
       <div className="mb-3 flex flex-wrap items-center gap-2">
+        {filterSelect(course, setCourse, "course", courses)}
+        {filterSelect(section, setSection, "section", sections)}
+        {filterSelect(gender, setGender, "gender", genders)}
         <Input
           value={q}
           onChange={(e) => setQ(e.target.value)}
@@ -216,6 +267,8 @@ export function StudentTable({ rows, showMentor = false, initialFilter = "" }) {
               <th>Placement risk</th>
               <th>vs class avg</th>
               <th>Alerts</th>
+              <th>Top score driver</th>
+              <th>Main risk driver</th>
               <th>Segment</th>
               {showMentor && <th>Teacher</th>}
             </tr>
@@ -246,7 +299,12 @@ export function StudentTable({ rows, showMentor = false, initialFilter = "" }) {
                     {r.name}
                   </Link>
                   <span className="block text-xs text-muted-foreground">
-                    {r.id} · {r.branch} · Sem {r.semester}
+                    {r.id} ·{" "}
+                    {[r.course, r.branch, r.section && `Sec ${r.section}`]
+                      .filter(Boolean)
+                      .join(" ")}{" "}
+                    · Year {r.year} · Sem {r.semester}
+                    {r.gender && ` · ${r.gender}`}
                   </span>
                 </td>
                 <td>
@@ -276,6 +334,8 @@ export function StudentTable({ rows, showMentor = false, initialFilter = "" }) {
                     : (r.score - classAvg > 0 ? "+" : "") + (r.score - classAvg).toFixed(1)}
                 </td>
                 <td className={r.urgent ? "font-medium text-destructive" : ""}>{r.alerts}</td>
+                <td className="text-xs">{r.topDriver ?? "—"}</td>
+                <td className="text-xs">{r.riskDriver ?? "None"}</td>
                 <td className="text-xs">{r.segment}</td>
                 {showMentor && (
                   <td className={r.mentorId ? "" : "text-muted-foreground"}>
@@ -287,7 +347,7 @@ export function StudentTable({ rows, showMentor = false, initialFilter = "" }) {
             {shown.length === 0 && (
               <tr>
                 <td
-                  colSpan={showMentor ? 13 : 12}
+                  colSpan={showMentor ? 15 : 14}
                   className="p-6 text-center text-muted-foreground"
                 >
                   No students match.

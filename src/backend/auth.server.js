@@ -1,3 +1,4 @@
+import { randomUUID } from "node:crypto";
 import bcrypt from "bcryptjs";
 import { SignJWT, jwtVerify } from "jose";
 import { deleteCookie, getCookie, getRequest, setCookie } from "@tanstack/react-start/server";
@@ -22,8 +23,15 @@ export async function verifyPassword(password, hash) {
   return hash ? ok : false;
 }
 export async function startSession(userId) {
+  const sid = randomUUID();
+  await query(
+    "INSERT INTO sessions(id, user_id, expires_at) VALUES($1,$2, now() + make_interval(secs => $3))",
+    [sid, userId, SESSION_SECONDS],
+  );
+  await query("DELETE FROM sessions WHERE expires_at < now()");
   const token = await new SignJWT({})
     .setProtectedHeader({ alg: "HS256" })
+    .setJti(sid)
     .setSubject(userId)
     .setIssuer("bib-insightiq")
     .setIssuedAt()
@@ -37,7 +45,23 @@ export async function startSession(userId) {
     // No maxAge: the browser drops the cookie when it is closed.
   });
 }
-export const endSession = () => deleteCookie(COOKIE, { path: "/" });
+async function tokenSessionId(token) {
+  try {
+    const { payload } = await jwtVerify(token, secretKey(), {
+      issuer: "bib-insightiq",
+      algorithms: ["HS256"],
+    });
+    return payload.jti ?? null;
+  } catch {
+    return null;
+  }
+}
+export async function endSession() {
+  const token = getCookie(COOKIE);
+  deleteCookie(COOKIE, { path: "/" });
+  const sid = token ? await tokenSessionId(token) : null;
+  if (sid) await query("DELETE FROM sessions WHERE id = $1", [sid]);
+}
 // Roles and the account itself are re-read from the database on every call, so removing a
 // role or deleting a user takes effect immediately instead of when the token expires.
 export async function currentUser() {
@@ -49,8 +73,13 @@ export async function currentUser() {
       issuer: "bib-insightiq",
       algorithms: ["HS256"],
     });
-    if (!payload.sub) return null;
+    if (!payload.sub || !payload.jti) return null;
     userId = payload.sub;
+    const live = await query(
+      "SELECT 1 FROM sessions WHERE id = $1 AND user_id = $2 AND expires_at > now()",
+      [payload.jti, userId],
+    );
+    if (!live.rows.length) return null;
   } catch {
     return null;
   }

@@ -25,7 +25,13 @@ export const CATEGORY = {
   poster: { label: "Poster", icon: ImageIcon, tone: "bg-violet-400/15 text-violet-300" },
 };
 
-const updatesQuery = { queryKey: ["campus-updates"], queryFn: () => listUpdates() };
+// Polled so a post made by staff reaches open student dashboards without a reload.
+const updatesQuery = {
+  queryKey: ["campus-updates"],
+  queryFn: () => listUpdates(),
+  staleTime: 0,
+  refetchInterval: 30_000,
+};
 export const useUpdates = () => useQuery(updatesQuery);
 
 const fmt = (iso) =>

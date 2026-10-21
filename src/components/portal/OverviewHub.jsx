@@ -3,7 +3,7 @@ import { Link } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
 import { ChevronLeft, ChevronRight, Megaphone, MessageSquare, Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { CATEGORY, useUpdates } from "@/components/portal/CampusUpdates";
+import { CATEGORY, PostUpdate, UpdatesFeed, useUpdates } from "@/components/portal/CampusUpdates";
 import { listContactMessages } from "@/lib/campus.functions";
 import { liveAssignments } from "@/lib/live-profile";
 import { useCampus } from "@/lib/use-campus";
@@ -247,6 +247,18 @@ export function OverviewHub() {
   }[role];
   return (
     <>
+      <section className="mb-8">
+        <div className="mb-3 flex flex-wrap items-center justify-between gap-3">
+          <div>
+            <h2 className="font-display text-xl font-bold">Campus updates</h2>
+            <p className="text-sm text-muted-foreground">
+              Placements, events, notices and posters from the university
+            </p>
+          </div>
+          {role !== "student" && <PostUpdate />}
+        </div>
+        <UpdatesFeed limit={3} seeAll empty="Nothing has been posted yet." />
+      </section>
       <QuickLinkPills items={links} />
       <div className="mb-8 mt-8 grid gap-8 lg:grid-cols-[1.5fr_1fr_1fr]">
         <Panel
