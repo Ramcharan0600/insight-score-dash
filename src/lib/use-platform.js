@@ -5,9 +5,14 @@ import { campusOptions } from "@/lib/use-campus";
 import {
   loadAllComplaints,
   loadAssessments,
+  loadAiLessons,
   loadDrives,
+  loadLearningProfile,
   loadLms,
   loadMockInterviews,
+  loadMyInterviews,
+  loadMyResume,
+  loadTimetable,
   loadMyComplaints,
   loadMyRatings,
   loadNotifications,
@@ -18,6 +23,11 @@ import {
 export const KEYS = {
   notifications: ["notifications"],
   lms: ["lms"],
+  learningProfile: ["learning-profile"],
+  aiLessons: ["ai-lessons"],
+  timetable: ["timetable"],
+  resume: ["resume"],
+  interviews: ["interviews"],
   drives: ["drives"],
   opportunities: ["opportunities"],
   complaints: ["complaints"],
@@ -34,6 +44,15 @@ export const useNotifications = () =>
     staleTime: 20_000,
   });
 export const useLms = () => useQuery({ queryKey: KEYS.lms, queryFn: () => loadLms() });
+export const useLearningProfile = () =>
+  useQuery({ queryKey: KEYS.learningProfile, queryFn: () => loadLearningProfile() });
+export const useAiLessons = () =>
+  useQuery({ queryKey: KEYS.aiLessons, queryFn: () => loadAiLessons() });
+export const useTimetable = () =>
+  useQuery({ queryKey: KEYS.timetable, queryFn: () => loadTimetable() });
+export const useResume = () => useQuery({ queryKey: KEYS.resume, queryFn: () => loadMyResume() });
+export const useInterviews = () =>
+  useQuery({ queryKey: KEYS.interviews, queryFn: () => loadMyInterviews() });
 export const useDrives = () => useQuery({ queryKey: KEYS.drives, queryFn: () => loadDrives() });
 export const useOpportunities = () =>
   useQuery({ queryKey: KEYS.opportunities, queryFn: () => loadOpportunities() });

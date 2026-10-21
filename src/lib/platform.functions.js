@@ -5,6 +5,10 @@ import { limitByIp } from "@/backend/auth.server";
 import { withTransaction } from "@/backend/db.server";
 import { fileSchema } from "@/backend/files.server";
 import * as lms from "@/backend/lms.server";
+import * as aiLessons from "@/backend/ai-lessons.server";
+import * as attendance from "@/backend/attendance.server";
+import * as interview from "@/backend/interview.server";
+import { TYPE_KEYS } from "@/lib/interview-prompt";
 import * as feedback from "@/backend/feedback.server";
 import * as placement from "@/backend/placement.server";
 import * as engagement from "@/backend/engagement.server";
@@ -139,6 +143,199 @@ export const downloadLmsFile = createServerFn({ method: "POST" })
   .validator(z.object({ kind: z.enum(["material", "submission"]), id: z.string().uuid() }))
   .handler(({ data, context }) =>
     run(context.user, (db, user) => lms.downloadFile(db, user, data)),
+  );
+
+// ---------------------------------------------------------------- personalised AI lessons
+export const loadLearningProfile = createServerFn({ method: "POST" })
+  .middleware([requireAuth])
+  .handler(({ context }) => run(context.user, (db, user) => aiLessons.loadProfile(db, user)));
+export const saveLearningProfile = createServerFn({ method: "POST" })
+  .middleware([requireAuth])
+  .validator(
+    z.object({
+      answers: z
+        .array(
+          z.object({
+            questionId: z.string().max(10),
+            optionIds: z.array(z.string().max(2)).min(1).max(4),
+          }),
+        )
+        .length(20),
+    }),
+  )
+  .handler(({ data, context }) =>
+    run(context.user, (db, user) => aiLessons.saveProfile(db, user, data)),
+  );
+export const loadAiLessons = createServerFn({ method: "POST" })
+  .middleware([requireAuth])
+  .handler(({ context }) => run(context.user, (db, user) => aiLessons.listLessons(db, user)));
+export const loadAiLesson = createServerFn({ method: "POST" })
+  .middleware([requireAuth])
+  .validator(id)
+  .handler(({ data, context }) =>
+    run(context.user, (db, user) => aiLessons.getLesson(db, user, data)),
+  );
+export const createAiLesson = createServerFn({ method: "POST" })
+  .middleware([requireAuth])
+  .validator(
+    z.object({
+      subject: text(100, 1),
+      unit: z.number().int().min(1).max(6).optional(),
+      topic: text(150, 3),
+      focus: text(300),
+      detailLevel: z.enum(["quick", "standard", "detailed"]),
+      durationMin: z.number().int().min(2).max(12).optional(),
+    }),
+  )
+  .handler(async ({ data, context }) => {
+    // Each lesson is a paid model call, so keep generation well below the normal request limits.
+    limitByIp("ai-lesson", 20, 60 * 60 * 1000);
+    return run(context.user, (db, user) => aiLessons.createLesson(db, user, data));
+  });
+export const saveAiQuiz = createServerFn({ method: "POST" })
+  .middleware([requireAuth])
+  .validator(
+    z.object({
+      id: z.string().uuid(),
+      score: z.number().int().min(0).max(20),
+      total: z.number().int().min(1).max(20),
+    }),
+  )
+  .handler(({ data, context }) =>
+    run(context.user, (db, user) => aiLessons.recordQuiz(db, user, data)),
+  );
+export const removeAiLesson = createServerFn({ method: "POST" })
+  .middleware([requireAuth])
+  .validator(id)
+  .handler(({ data, context }) =>
+    run(context.user, (db, user) => aiLessons.deleteLesson(db, user, data)),
+  );
+
+// ---------------------------------------------------------------- attendance and timetable
+const period = z.number().int().min(1).max(10);
+export const loadAttendanceRoster = createServerFn({ method: "POST" })
+  .middleware([requireAuth])
+  .validator(z.object({ subject: text(100, 1), date, period }))
+  .handler(({ data, context }) =>
+    run(context.user, (db, user) => attendance.loadRoster(db, user, data)),
+  );
+export const saveAttendance = createServerFn({ method: "POST" })
+  .middleware([requireAuth])
+  .validator(
+    z.object({
+      subject: text(100, 1),
+      date,
+      period,
+      marks: z.array(z.object({ studentId: text(60, 1), present: z.boolean() })).max(500),
+    }),
+  )
+  .handler(({ data, context }) =>
+    run(context.user, (db, user) => attendance.markAttendance(db, user, data, today())),
+  );
+export const loadRecentSessions = createServerFn({ method: "POST" })
+  .middleware([requireAuth])
+  .validator(z.object({ subject: text(100, 1) }))
+  .handler(({ data, context }) =>
+    run(context.user, (db, user) => attendance.recentSessions(db, user, data)),
+  );
+export const loadMyAttendance = createServerFn({ method: "POST" })
+  .middleware([requireAuth])
+  .validator(z.object({ subject: text(100, 1) }))
+  .handler(({ data, context }) =>
+    run(context.user, (db, user) => attendance.myAttendance(db, user, data)),
+  );
+const clock = z.string().regex(/^([01]\d|2[0-3]):[0-5]\d$/, "Use a time like 09:30.");
+export const loadTimetable = createServerFn({ method: "POST" })
+  .middleware([requireAuth])
+  .handler(({ context }) => run(context.user, (db, user) => attendance.loadTimetable(db, user)));
+export const saveTimetableSlot = createServerFn({ method: "POST" })
+  .middleware([requireAuth])
+  .validator(
+    z.object({
+      subject: text(100, 1),
+      day: z.number().int().min(1).max(6),
+      start: clock,
+      end: clock,
+      room: text(60),
+    }),
+  )
+  .handler(({ data, context }) =>
+    run(context.user, (db, user) => attendance.saveSlot(db, user, data)),
+  );
+export const removeTimetableSlot = createServerFn({ method: "POST" })
+  .middleware([requireAuth])
+  .validator(id)
+  .handler(({ data, context }) =>
+    run(context.user, (db, user) => attendance.deleteSlot(db, user, data)),
+  );
+
+// ---------------------------------------------------------------- resume and AI mock interviews
+export const loadMyResume = createServerFn({ method: "POST" })
+  .middleware([requireAuth])
+  .handler(({ context }) => run(context.user, (db, user) => interview.loadResume(db, user)));
+export const saveMyResume = createServerFn({ method: "POST" })
+  .middleware([requireAuth])
+  .validator(z.object({ file: fileSchema.optional(), text: text(20000).optional() }))
+  .handler(async ({ data, context }) => {
+    limitByIp("resume-upload", 30, 60 * 60 * 1000);
+    return run(context.user, (db, user) => interview.saveResume(db, user, data));
+  });
+export const removeMyResume = createServerFn({ method: "POST" })
+  .middleware([requireAuth])
+  .handler(({ context }) => run(context.user, (db, user) => interview.removeResume(db, user)));
+export const downloadMyResume = createServerFn({ method: "POST" })
+  .middleware([requireAuth])
+  .handler(({ context }) => run(context.user, (db, user) => interview.downloadResume(db, user)));
+export const startMockInterview = createServerFn({ method: "POST" })
+  .middleware([requireAuth])
+  .validator(
+    z.object({
+      role: text(100, 2),
+      difficulty: z.enum(["easy", "medium", "hard"]),
+      types: z.array(z.enum(TYPE_KEYS)).min(1).max(TYPE_KEYS.length),
+      count: z.number().int().min(3).max(14),
+    }),
+  )
+  .handler(async ({ data, context }) => {
+    // Each interview is two paid model calls, so keep it well below the normal request limits.
+    limitByIp("interview", 20, 60 * 60 * 1000);
+    return run(context.user, (db, user) => interview.startInterview(db, user, data));
+  });
+export const submitMockInterview = createServerFn({ method: "POST" })
+  .middleware([requireAuth])
+  .validator(
+    z.object({
+      id: z.string().uuid(),
+      answers: z
+        .array(
+          z.object({
+            index: z.number().int().min(0).max(30),
+            answer: text(6000),
+            code: text(8000),
+            language: text(30),
+          }),
+        )
+        .max(30),
+    }),
+  )
+  .handler(async ({ data, context }) => {
+    limitByIp("interview-grade", 20, 60 * 60 * 1000);
+    return run(context.user, (db, user) => interview.submitInterview(db, user, data));
+  });
+export const loadMyInterviews = createServerFn({ method: "POST" })
+  .middleware([requireAuth])
+  .handler(({ context }) => run(context.user, (db, user) => interview.listInterviews(db, user)));
+export const loadInterviewResult = createServerFn({ method: "POST" })
+  .middleware([requireAuth])
+  .validator(id)
+  .handler(({ data, context }) =>
+    run(context.user, (db, user) => interview.getInterviewResult(db, user, data)),
+  );
+export const removeInterview = createServerFn({ method: "POST" })
+  .middleware([requireAuth])
+  .validator(id)
+  .handler(({ data, context }) =>
+    run(context.user, (db, user) => interview.deleteInterview(db, user, data)),
   );
 
 // ---------------------------------------------------------------- feedback centre

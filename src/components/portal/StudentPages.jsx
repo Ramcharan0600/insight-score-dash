@@ -15,6 +15,7 @@ import {
 } from "@/components/student-profile/LiveStudentProfile";
 import { Attendance } from "@/components/student-profile/shared";
 import { StaffCategory } from "@/components/portal/CategoryView";
+import { MarkAttendance, MyAttendanceLog, Timetable } from "@/components/portal/AttendanceTools";
 import { StaffDrives, StudentDrives } from "@/components/portal/PlacementPages";
 import { Opportunities } from "@/components/portal/EngagementPages";
 import { StudentFeedbackCentre } from "@/components/portal/FeedbackPages";
@@ -83,10 +84,27 @@ export function LearningPage() {
 
 export function AttendancePage() {
   const { role } = useCampus();
-  if (role !== "student") return <StaffCategory category="attendance" />;
+  if (role !== "student")
+    return (
+      <StaffTabs
+        title="Attendance"
+        sub="Mark classes, set the timetable and watch attendance shortages"
+        tabs={[
+          ["mark", "Mark attendance", <MarkAttendance key="a" />],
+          ["timetable", "Timetable", <Timetable key="b" canEdit />],
+          ["overview", "Overview", <StaffCategory key="c" category="attendance" embedded />],
+        ]}
+      />
+    );
   return (
     <StudentFrame title="Attendance" sub="Where you stand and how many classes you need">
-      {(s) => <Attendance s={s} />}
+      {(s) => (
+        <div className="space-y-8">
+          <Attendance s={s} />
+          <MyAttendanceLog subjects={s.subjects.map((x) => x.subject)} />
+          <Timetable canEdit={false} />
+        </div>
+      )}
     </StudentFrame>
   );
 }

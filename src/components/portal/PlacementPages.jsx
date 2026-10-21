@@ -26,6 +26,7 @@ import {
 import { roleMatch } from "@/lib/role-match";
 import { todayIso } from "@/lib/live-profile";
 import { useDrives, useMockInterviews, useRefreshAll } from "@/lib/use-platform";
+import { MockInterviewHub } from "@/components/portal/InterviewPages";
 import { useCampus } from "@/lib/use-campus";
 
 const RESULT = {
@@ -271,10 +272,13 @@ export function StudentDrives({ s }) {
           <RoleMatch s={s} />
         </section>
         <section className="surface p-4">
-          <SectionTitle sub="Recorded by your teachers">Mock interviews</SectionTitle>
+          <SectionTitle sub="Recorded by your teachers and your AI practice interviews">
+            Mock interview record
+          </SectionTitle>
           <MockList canEdit={false} />
         </section>
       </div>
+      <MockInterviewHub />
     </div>
   );
 }

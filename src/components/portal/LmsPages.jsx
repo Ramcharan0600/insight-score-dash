@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import {
   CalendarClock,
+  Download,
   ExternalLink,
   FileText,
   Link2,
@@ -26,6 +27,7 @@ import {
 } from "@/components/ui-kit";
 import { PageTitle, RoleGate } from "@/components/portal/PortalShell";
 import { StaffCategory } from "@/components/portal/CategoryView";
+import { AiLessonsPanel } from "@/components/portal/AiLessonPages";
 import {
   downloadLmsFile,
   gradeLmsSubmission,
@@ -41,6 +43,22 @@ import {
 import { todayIso } from "@/lib/live-profile";
 import { useLms, useRefreshAll } from "@/lib/use-platform";
 import { useCampus } from "@/lib/use-campus";
+import { downloadText, hasSyllabus, subjectSyllabus, unitSyllabus } from "@/lib/syllabus";
+
+function SyllabusButton({ file, disabled, label = "Download syllabus" }) {
+  return (
+    <Button
+      type="button"
+      variant="outline"
+      size="sm"
+      disabled={disabled}
+      title={disabled ? "No syllabus has been published for this unit yet." : undefined}
+      onClick={() => downloadText(file)}
+    >
+      <Download /> {label}
+    </Button>
+  );
+}
 
 const KIND = {
   note: { icon: NotebookText, label: "Note" },
@@ -158,7 +176,7 @@ function SubmitForm({ assignment, onDone }) {
   );
 }
 
-function StudentUnit({ u, refresh, filter }) {
+function StudentUnit({ u, subject, refresh, filter }) {
   const { busy, run } = useAction(refresh);
   const done = u.materials.filter((m) => m.completed).length;
   const a = u.assignment;
@@ -181,6 +199,9 @@ function StudentUnit({ u, refresh, filter }) {
             <ProgressBar value={(done / u.materials.length) * 100} />
           </div>
         )}
+      </div>
+      <div className="mt-2">
+        <SyllabusButton file={unitSyllabus(subject, u)} disabled={!hasSyllabus(u)} />
       </div>
       {u.materials.length ? (
         <ul className="mt-2 divide-y">
@@ -292,11 +313,23 @@ function StudentLms() {
           </Button>
         ))}
       </div>
+      <SyllabusButton
+        file={subjectSyllabus(current.subject, current.units)}
+        disabled={!current.units.some(hasSyllabus)}
+        label="Download full syllabus"
+      />
       <div className="grid gap-4 lg:grid-cols-2">
         {current.units.map((u) => (
-          <StudentUnit key={u.unit} u={u} refresh={refresh} filter={filter} />
+          <StudentUnit
+            key={u.unit}
+            u={u}
+            subject={current.subject}
+            refresh={refresh}
+            filter={filter}
+          />
         ))}
       </div>
+      <AiLessonsPanel subjects={data.subjects.map((s) => s.subject)} />
     </div>
   );
 }
@@ -699,6 +732,9 @@ function StaffManage() {
             </span>
           </summary>
           <div className="mt-3">
+            <div className="mb-2">
+              <SyllabusButton file={unitSyllabus(current.subject, u)} disabled={!hasSyllabus(u)} />
+            </div>
             <UnitForm
               key={`${current.subject}-${u.unit}-${u.title}`}
               subject={current.subject}
