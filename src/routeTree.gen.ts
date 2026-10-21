@@ -41,6 +41,7 @@ import { Route as AuthenticatedPortalSkillsRouteImport } from './routes/_authent
 import { Route as AuthenticatedPortalTeachersRouteImport } from './routes/_authenticated/portal.teachers'
 import { Route as AuthenticatedPortalUpdatesRouteImport } from './routes/_authenticated/portal.updates'
 import { Route as ApiPublicChatRouteImport } from './routes/api.public.chat'
+import { Route as ApiPublicWhatsappRouteImport } from './routes/api.public.whatsapp'
 import { Route as AuthenticatedPortalStudentsIndexRouteImport } from './routes/_authenticated/portal.students.index'
 import { Route as AuthenticatedPortalStudentsIdRouteImport } from './routes/_authenticated/portal.students.$id'
 
@@ -223,6 +224,11 @@ const ApiPublicChatRoute = ApiPublicChatRouteImport.update({
   path: '/api/public/chat',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiPublicWhatsappRoute = ApiPublicWhatsappRouteImport.update({
+  id: '/api/public/whatsapp',
+  path: '/api/public/whatsapp',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AuthenticatedPortalStudentsIndexRoute =
   AuthenticatedPortalStudentsIndexRouteImport.update({
     id: '/students/',
@@ -267,6 +273,7 @@ export interface FileRoutesByFullPath {
   '/portal/teachers': typeof AuthenticatedPortalTeachersRoute
   '/portal/updates': typeof AuthenticatedPortalUpdatesRoute
   '/api/public/chat': typeof ApiPublicChatRoute
+  '/api/public/whatsapp': typeof ApiPublicWhatsappRoute
   '/portal/': typeof AuthenticatedPortalIndexRoute
   '/portal/students/$id': typeof AuthenticatedPortalStudentsIdRoute
   '/portal/students/': typeof AuthenticatedPortalStudentsIndexRoute
@@ -301,6 +308,7 @@ export interface FileRoutesByTo {
   '/portal/teachers': typeof AuthenticatedPortalTeachersRoute
   '/portal/updates': typeof AuthenticatedPortalUpdatesRoute
   '/api/public/chat': typeof ApiPublicChatRoute
+  '/api/public/whatsapp': typeof ApiPublicWhatsappRoute
   '/portal': typeof AuthenticatedPortalIndexRoute
   '/portal/students/$id': typeof AuthenticatedPortalStudentsIdRoute
   '/portal/students': typeof AuthenticatedPortalStudentsIndexRoute
@@ -338,6 +346,7 @@ export interface FileRoutesById {
   '/_authenticated/portal/teachers': typeof AuthenticatedPortalTeachersRoute
   '/_authenticated/portal/updates': typeof AuthenticatedPortalUpdatesRoute
   '/api/public/chat': typeof ApiPublicChatRoute
+  '/api/public/whatsapp': typeof ApiPublicWhatsappRoute
   '/_authenticated/portal/': typeof AuthenticatedPortalIndexRoute
   '/_authenticated/portal/students/$id': typeof AuthenticatedPortalStudentsIdRoute
   '/_authenticated/portal/students/': typeof AuthenticatedPortalStudentsIndexRoute
@@ -375,6 +384,7 @@ export interface FileRouteTypes {
     | '/portal/teachers'
     | '/portal/updates'
     | '/api/public/chat'
+    | '/api/public/whatsapp'
     | '/portal/'
     | '/portal/students/$id'
     | '/portal/students/'
@@ -409,6 +419,7 @@ export interface FileRouteTypes {
     | '/portal/teachers'
     | '/portal/updates'
     | '/api/public/chat'
+    | '/api/public/whatsapp'
     | '/portal'
     | '/portal/students/$id'
     | '/portal/students'
@@ -445,6 +456,7 @@ export interface FileRouteTypes {
     | '/_authenticated/portal/teachers'
     | '/_authenticated/portal/updates'
     | '/api/public/chat'
+    | '/api/public/whatsapp'
     | '/_authenticated/portal/'
     | '/_authenticated/portal/students/$id'
     | '/_authenticated/portal/students/'
@@ -461,6 +473,7 @@ export interface RootRouteChildren {
   ResetPasswordRoute: typeof ResetPasswordRoute
   SolutionRoute: typeof SolutionRoute
   ApiPublicChatRoute: typeof ApiPublicChatRoute
+  ApiPublicWhatsappRoute: typeof ApiPublicWhatsappRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -689,6 +702,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiPublicChatRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/public/whatsapp': {
+      id: '/api/public/whatsapp'
+      path: '/api/public/whatsapp'
+      fullPath: '/api/public/whatsapp'
+      preLoaderRoute: typeof ApiPublicWhatsappRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/_authenticated/portal/students/': {
       id: '/_authenticated/portal/students/'
       path: '/students'
@@ -783,6 +803,7 @@ const rootRouteChildren: RootRouteChildren = {
   ResetPasswordRoute: ResetPasswordRoute,
   SolutionRoute: SolutionRoute,
   ApiPublicChatRoute: ApiPublicChatRoute,
+  ApiPublicWhatsappRoute: ApiPublicWhatsappRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
