@@ -5,12 +5,12 @@ import { pageHead } from "@/lib/metadata";
 import {
   ArrowRight,
   ArrowUpRight,
-  CircleCheck,
   Users,
   ScanLine,
   ClipboardCheck,
   ShieldCheck,
 } from "lucide-react";
+import { DEFAULT_WEIGHTS } from "@/lib/types";
 import { SOURCES } from "./solution";
 export const Route = createFileRoute("/")({
   head: () =>
@@ -126,151 +126,260 @@ function Home() {
             </figure>
           </div>
         </section>
-        <section className="border-b bg-card">
-          <div className="mx-auto grid max-w-7xl gap-6 px-5 py-7 sm:grid-cols-3 lg:px-8">
-            {[
-              { n: "07", t: "Connected data sources", d: "One shared student identity" },
-              { n: "03", t: "Connected perspectives", d: "Student · Faculty · Administrator" },
-              { n: "100", t: "Point Success Score", d: "Transparent, advisory, actionable" },
-            ].map((x) => (
-              <div key={x.n} className="flex items-center gap-5">
-                <span className="font-display text-4xl font-semibold text-primary">{x.n}</span>
-                <div>
-                  <p className="text-sm font-semibold">{x.t}</p>
-                  <p className="mt-1 text-xs text-muted-foreground">{x.d}</p>
-                </div>
+        <section className="mx-auto max-w-7xl px-5 py-16 lg:px-8" aria-labelledby="problem">
+          <p className="eyebrow">THE CAMPUS PROBLEM</p>
+          <h2 id="problem" className="mt-3 max-w-3xl font-display text-3xl font-bold sm:text-4xl">
+            One student. Seven systems. Nobody sees the whole picture.
+          </h2>
+          <p className="mt-4 max-w-2xl text-muted-foreground">
+            Good grades can hide poor attendance. Strong coding can hide an aptitude gap. When
+            marks, attendance, the LMS, activities, skills, placement and feedback live in separate
+            places, the students who need help are found late.
+          </p>
+          <div className="mt-8 grid gap-3 sm:grid-cols-2 lg:grid-cols-4" aria-hidden>
+            {SOURCES.map((s) => (
+              <div
+                key={s.name}
+                className="flex items-center gap-3 rounded-xl border border-dashed bg-card/60 p-4"
+              >
+                <s.icon className="size-5 text-label" />
+                <span className="text-sm text-muted-foreground">{s.name} system</span>
               </div>
             ))}
           </div>
         </section>
-        <section className="mx-auto max-w-7xl px-5 py-16 lg:px-8">
-          <div className="flex flex-wrap items-end justify-between gap-5">
+
+        <section className="border-y bg-card" aria-labelledby="solution">
+          <div className="mx-auto grid max-w-7xl items-center gap-10 px-5 py-16 lg:grid-cols-2 lg:px-8">
             <div>
-              <p className="eyebrow">LESS GUESSWORK. MORE MEANINGFUL SUPPORT.</p>
-              <h2 className="mt-4 font-display text-3xl font-semibold sm:text-4xl">
-                Three questions. A clearer next step.
+              <p className="eyebrow">THE SOLUTION</p>
+              <h2 id="solution" className="mt-3 font-display text-3xl font-bold sm:text-4xl">
+                A unified student intelligence platform
               </h2>
+              <p className="mt-4 text-muted-foreground">
+                BIB InsightIQ joins the seven sources on one student identity and answers three
+                questions for every student: who needs help, why, and what to do next.
+              </p>
+              <ul className="mt-6 space-y-3">
+                {[
+                  [
+                    Users,
+                    "Who needs help?",
+                    "Students ranked by transparent score bands and risk flags.",
+                  ],
+                  [
+                    ScanLine,
+                    "Why are they at risk?",
+                    "Every flag lists the exact rule, value and threshold behind it.",
+                  ],
+                  [
+                    ClipboardCheck,
+                    "What should happen next?",
+                    "Interventions with an owner, a follow-up date and visible progress.",
+                  ],
+                ].map(([Icon, q, d]) => (
+                  <li key={q} className="flex gap-3">
+                    <Icon className="mt-0.5 size-5 shrink-0 text-primary" />
+                    <span>
+                      <b>{q}</b>
+                      <span className="block text-sm text-muted-foreground">{d}</span>
+                    </span>
+                  </li>
+                ))}
+              </ul>
             </div>
-            <Button asChild variant="link">
-              <Link to="/solution">
-                Why BIB InsightIQ <ArrowRight />
-              </Link>
-            </Button>
+            <div className="surface p-5" aria-label="Seven data domains">
+              <div className="flex items-center justify-center rounded-xl bg-accent p-4">
+                <span className="brand-mark" aria-hidden>
+                  <ScanLine className="size-6" />
+                </span>
+                <span className="ml-3 font-display font-bold">One student ID</span>
+              </div>
+              <div className="mt-3 grid grid-cols-2 gap-2 sm:grid-cols-3">
+                {SOURCES.map((s) => (
+                  <div
+                    key={s.name}
+                    className="flex items-center gap-2 rounded-lg border p-2 text-sm"
+                  >
+                    <s.icon className="size-4 text-primary" />
+                    {s.name}
+                  </div>
+                ))}
+              </div>
+            </div>
           </div>
-          <div className="mt-10 grid gap-8 md:grid-cols-3">
-            {[
-              {
-                icon: Users,
-                q: "Who needs help?",
-                d: "Find students who need attention with evidence-led risk signals and a complete view of their progress.",
-                n: "01",
-              },
-              {
-                icon: ScanLine,
-                q: "Why are they at risk?",
-                d: "Connect grades, attendance, learning activity and placement readiness to reveal gaps a single system can miss.",
-                n: "02",
-              },
-              {
-                icon: ClipboardCheck,
-                q: "What should faculty do next?",
-                d: "Turn the insight into a practical mentor action, with an owner, a follow-up date and visible progress.",
-                n: "03",
-              },
-            ].map((x) => (
-              <article key={x.n} className="border-t pt-6">
-                <div className="flex items-center justify-between">
-                  <x.icon className="motion-icon size-7 text-primary" />
-                  <span className="text-xs text-muted-foreground">{x.n}</span>
-                </div>
-                <h3 className="mt-6 text-xl font-semibold">{x.q}</h3>
-                <p className="mt-3 text-sm leading-relaxed text-muted-foreground">{x.d}</p>
+        </section>
+
+        <section className="mx-auto max-w-7xl px-5 py-16 lg:px-8" aria-labelledby="domains">
+          <p className="eyebrow">SEVEN CONNECTED DATA DOMAINS</p>
+          <h2 id="domains" className="mt-3 font-display text-3xl font-bold sm:text-4xl">
+            Each domain has its own page, filters and rules
+          </h2>
+          <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+            {SOURCES.map((s) => (
+              <article
+                key={s.name}
+                className="surface p-5 transition-colors hover:border-[var(--border-hover)]"
+              >
+                <s.icon className="size-6 text-primary" />
+                <h3 className="mt-4 font-semibold">{s.name}</h3>
+                <p className="mt-1 text-sm text-muted-foreground">{s.detail}</p>
               </article>
             ))}
           </div>
         </section>
-        <section className="overflow-hidden border-y bg-muted/50 py-10">
-          <p className="eyebrow mb-7 text-center">THE WHOLE STORY, NOT ANOTHER SILO</p>
-          <div>
-            <div className="mx-auto flex max-w-5xl flex-wrap items-center justify-center gap-x-12 gap-y-5 px-6">
-              {SOURCES.map((s, i) => (
-                <div key={`${s.name}-${i}`} className="flex shrink-0 items-center gap-3">
-                  <s.icon className="size-6 text-primary" />
-                  <span className="font-display text-lg font-medium">{s.name}</span>
+
+        <section className="border-y bg-card" aria-labelledby="score">
+          <div className="mx-auto grid max-w-7xl gap-10 px-5 py-16 lg:grid-cols-2 lg:px-8">
+            <div>
+              <p className="eyebrow">EXPLAINABLE STUDENT SUCCESS SCORE</p>
+              <h2 id="score" className="mt-3 font-display text-3xl font-bold sm:text-4xl">
+                A score that starts a conversation
+              </h2>
+              <p className="mt-4 text-muted-foreground">
+                Six components, each normalised to 100 and combined with published weights. Select
+                any component on a student page to see the numbers behind it. Missing data is shown
+                as missing and is never counted as zero. The score is rule-based, not an AI
+                prediction.
+              </p>
+              <ul className="mt-5 grid grid-cols-2 gap-2 text-sm">
+                {[
+                  ["80+", "On Track"],
+                  ["65–79", "Monitor"],
+                  ["50–64", "Needs Attention"],
+                  ["Below 50", "High Priority"],
+                ].map(([range, name]) => (
+                  <li key={name} className="rounded-lg border p-2">
+                    <b className="tabular-nums">{range}</b> · {name}
+                  </li>
+                ))}
+              </ul>
+            </div>
+            <div className="surface space-y-3 p-5">
+              <p className="text-xs font-semibold uppercase text-label">Default weights</p>
+              {Object.entries(DEFAULT_WEIGHTS).map(([k, w]) => (
+                <div key={k}>
+                  <div className="flex justify-between text-sm">
+                    <span className="capitalize">
+                      {k === "placement" ? "placement readiness" : k}
+                    </span>
+                    <span className="tabular-nums">{w}%</span>
+                  </div>
+                  <div className="mt-1 h-2 overflow-hidden rounded-full bg-muted">
+                    <div
+                      className="h-full rounded-full bg-primary"
+                      style={{ width: `${w * 3}%` }}
+                    />
+                  </div>
                 </div>
+              ))}
+              <p className="text-xs text-muted-foreground">
+                Academic risk and placement risk are two separate flags with their own rules.
+              </p>
+            </div>
+          </div>
+        </section>
+
+        <section className="mx-auto max-w-7xl px-5 py-16 lg:px-8" aria-labelledby="risk">
+          <p className="eyebrow">EARLY RISK IDENTIFICATION AND INTERVENTION</p>
+          <h2 id="risk" className="mt-3 font-display text-3xl font-bold sm:text-4xl">
+            From signal to support, with a record of what happened
+          </h2>
+          <ol className="mt-8 grid gap-4 md:grid-cols-5">
+            {[
+              [
+                "Detect",
+                "Rules flag low attendance, backlogs, missed deadlines and weak readiness.",
+              ],
+              ["Explain", "The student page lists the rules that fired and their values."],
+              ["Act", "A mentor creates an intervention with an owner and a date."],
+              ["Follow up", "Overdue follow-ups raise notifications."],
+              ["Review", "Outcomes are recorded so progress is visible."],
+            ].map(([t, d], i) => (
+              <li key={t} className="surface p-4">
+                <span className="font-display text-2xl font-bold tabular-nums text-primary">
+                  {i + 1}
+                </span>
+                <h3 className="mt-1 font-semibold">{t}</h3>
+                <p className="mt-1 text-sm text-muted-foreground">{d}</p>
+              </li>
+            ))}
+          </ol>
+        </section>
+
+        <section className="border-y bg-card" aria-labelledby="workspaces">
+          <div className="mx-auto max-w-7xl px-5 py-16 lg:px-8">
+            <p className="eyebrow">THREE WORKSPACES</p>
+            <h2 id="workspaces" className="mt-3 font-display text-3xl font-bold sm:text-4xl">
+              The right view for each person
+            </h2>
+            <div className="mt-8 grid gap-4 md:grid-cols-3">
+              {[
+                [
+                  "Student",
+                  "Your score, attendance planner, LMS units and assignments, placement drives with eligibility checklists, skills history and a confidential feedback centre.",
+                ],
+                [
+                  "Faculty and mentors",
+                  "Assigned students ranked by need, comparison, declining-performance alerts, grading, drive and opportunity management, and intervention tracking.",
+                ],
+                [
+                  "Administrators",
+                  "Campus analytics with filters, data-quality alerts, roles and assignments, CSV import, complaints review and an audit log.",
+                ],
+              ].map(([t, d]) => (
+                <article key={t} className="surface p-5">
+                  <h3 className="font-display text-lg font-semibold">{t}</h3>
+                  <p className="mt-2 text-sm text-muted-foreground">{d}</p>
+                </article>
               ))}
             </div>
           </div>
         </section>
-        <section className="mx-auto grid max-w-7xl gap-12 px-5 py-16 md:grid-cols-2 lg:px-8">
-          <div>
-            <p className="eyebrow">CONNECT THE SIGNALS</p>
-            <h2 className="mt-4 text-3xl font-semibold">
-              Strong grades do not
-              <br />
-              always tell the whole story.
-            </h2>
-            <p className="mt-5 text-muted-foreground">
-              A student with a strong CGPA but low attendance needs a different plan from a strong
-              coder with weak aptitude. BIB InsightIQ connects the evidence so support is specific,
-              not generic.
-            </p>
-            <Button asChild variant="outline" className="mt-6">
-              <Link to="/auth">
-                Sign in as faculty <ArrowRight />
-              </Link>
-            </Button>
-          </div>
-          <div className="border-y py-7">
-            <p className="text-xs font-semibold text-muted-foreground">
-              ILLUSTRATIVE CROSS-SOURCE INSIGHT
-            </p>
-            <h3 className="mt-5 text-xl font-semibold">Strong coding. An aptitude gap.</h3>
-            <div className="mt-6 space-y-4">
-              <div className="flex items-center justify-between">
-                <span className="text-sm">Coding</span>
-                <span className="font-semibold text-success">85 / 100</span>
-              </div>
-              <div className="h-2 overflow-hidden rounded-full bg-muted">
-                <div className="h-full w-[85%] bg-success" />
-              </div>
-              <div className="flex items-center justify-between">
-                <span className="text-sm">Aptitude</span>
-                <span className="font-semibold text-warning">45 / 100</span>
-              </div>
-              <div className="h-2 overflow-hidden rounded-full bg-muted">
-                <div className="h-full w-[45%] bg-warning" />
-              </div>
+
+        <section className="mx-auto max-w-7xl px-5 py-16 lg:px-8" aria-labelledby="privacy">
+          <div className="grid gap-10 lg:grid-cols-2">
+            <div>
+              <p className="eyebrow">PRIVACY, PERMISSIONS AND RESPONSIBLE ANALYTICS</p>
+              <h2 id="privacy" className="mt-3 font-display text-3xl font-bold sm:text-4xl">
+                Private by design, advisory by intent
+              </h2>
             </div>
-            <p className="mt-6 flex gap-3 text-sm">
-              <CircleCheck className="size-5 shrink-0 text-primary" />
-              Next step: targeted aptitude practice and a mentor follow-up, rather than more generic
-              coding work.
-            </p>
-            <p className="mt-4 text-xs text-muted-foreground">
-              Illustrative example, not a live student record or selection prediction.
-            </p>
+            <ul className="space-y-3 text-sm">
+              {[
+                "Roles are stored in the database and re-checked on every request. Choosing a role at sign-in grants nothing.",
+                "Students see their own records. Teachers see students assigned to them. Administrators are granted separately.",
+                "Confidential complaints are readable only by the student and administrators, and notifications never contain their text.",
+                "Scores and flags are advisory. They point a person to a conversation; they do not decide outcomes.",
+                "Passwords are hashed and sessions can be ended server-side.",
+              ].map((x) => (
+                <li key={x} className="flex gap-3">
+                  <ShieldCheck className="mt-0.5 size-5 shrink-0 text-primary" />
+                  {x}
+                </li>
+              ))}
+            </ul>
           </div>
         </section>
-        <section className="border-t bg-accent/40">
-          <div className="mx-auto flex max-w-7xl flex-wrap items-center justify-between gap-8 px-5 py-12 lg:px-8">
+
+        <section className="border-t bg-accent/50" aria-labelledby="cta">
+          <div className="mx-auto flex max-w-7xl flex-wrap items-center justify-between gap-8 px-5 py-14 lg:px-8">
             <div>
-              <p className="eyebrow">A BETTER PICTURE. A BETTER CONVERSATION.</p>
-              <h2 className="mt-3 text-3xl font-semibold">
+              <h2 id="cta" className="font-display text-3xl font-bold">
                 See your campus through BIB InsightIQ.
               </h2>
-              <p className="mt-3 text-muted-foreground">
-                Explore the experience, or connect with the people behind it.
+              <p className="mt-2 text-muted-foreground">
+                Sign in to your workspace, or get in touch with the team.
               </p>
             </div>
             <div className="flex flex-wrap gap-3">
-              <Button asChild>
-                <Link to="/benefits">
-                  Find your perspective <ArrowRight />
+              <Button asChild size="lg">
+                <Link to="/auth">
+                  Get Started / Login <ArrowRight />
                 </Link>
               </Button>
-              <Button asChild variant="outline">
-                <Link to="/contact">Connect with us</Link>
+              <Button asChild size="lg" variant="outline">
+                <Link to="/contact">Contact us</Link>
               </Button>
             </div>
           </div>

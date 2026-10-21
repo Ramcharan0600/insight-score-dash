@@ -11,6 +11,7 @@ import {
   PlacementSnapshot,
   RecommendedActions,
 } from "@/components/portal/StudentDashboardCards";
+import { FacultyInsights } from "@/components/portal/FacultyInsights";
 import { AdminAnalytics } from "@/components/portal/AdminAnalytics";
 import { CampusInsights } from "@/components/portal/CampusInsights";
 import { Banner, BannerStat, PageTitle } from "@/components/portal/PortalShell";
@@ -336,6 +337,7 @@ function FacultyHome() {
           </Button>
         </div>
       </div>
+      <FacultyInsights rows={rows} />
       <CampusInsights rows={rows} />
     </div>
   );
