@@ -1,8 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useNavigate, useRouterState } from "@tanstack/react-router";
-import { Check, LogOut, MoonStar, Search, Sun, X } from "lucide-react";
+import { Check, LogOut, Search, X } from "lucide-react";
 import { SEARCH_GROUPS } from "@/lib/destinations";
-import { setTheme } from "@/components/ThemeToggle";
 
 // Every word typed must appear somewhere in the entry, so a student's name finds that student
 // instead of fuzzy-matching unrelated pages.
@@ -73,11 +72,7 @@ export function GlobalSearch({ role, rows, onSignOut }) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [role, rows, q],
   );
-  const actions = [
-    ["Switch to Space theme", () => setTheme("space"), MoonStar, "theme space dark night"],
-    ["Switch to Dust theme", () => setTheme("dust"), Sun, "theme dust sand light"],
-    ["Sign out", onSignOut, LogOut, "logout exit"],
-  ].filter(
+  const actions = [["Sign out", onSignOut, LogOut, "logout exit"]].filter(
     ([label, , , extra]) => words.length === 0 || matches(`${label} ${extra}`.toLowerCase(), words),
   );
 

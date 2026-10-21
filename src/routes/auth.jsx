@@ -25,7 +25,8 @@ export const Route = createFileRoute("/auth")({
       ? search.workspace
       : undefined,
   }),
-  head: () => pageHead("Log In", "Sign in to Orbit with student, teacher or administrator access."),
+  head: () =>
+    pageHead("Log In", "Sign in to BIB InsightIQ with student, teacher or administrator access."),
   component: Auth,
 });
 
@@ -38,7 +39,7 @@ const WORKSPACES = [
 // The left side cycles through a few messages, like a notice board. Manual only: no auto-motion.
 const SLIDES = [
   {
-    title: "Orbit sets a new standard for student success",
+    title: "BIB InsightIQ sets a new standard for student success",
     sub: "One score. Seven data sources. A clear next step for every student.",
     big: "07",
     bigLabel: "connected data sources",
@@ -192,7 +193,10 @@ function Auth() {
       data-role={workspace}
       className="grid min-h-dvh lg:h-dvh lg:grid-cols-2 lg:overflow-hidden"
     >
-      <section className="relative hidden overflow-hidden bg-black lg:block" aria-label="Orbit">
+      <section
+        className="relative hidden overflow-hidden bg-black lg:block"
+        aria-label="BIB InsightIQ"
+      >
         <img src={campus} alt="" className="absolute inset-0 size-full object-cover" />
         <div className="absolute inset-0 bg-black/25" />
         <div
@@ -260,7 +264,7 @@ function Auth() {
           </span>
           <div>
             <p className="font-display text-[clamp(1.6rem,6vh,3rem)] font-bold leading-none text-primary">
-              Orbit
+              BIB InsightIQ
             </p>
             <p className="mt-1 text-[11px] font-medium uppercase tracking-[0.35em] text-muted-foreground">
               Student success platform

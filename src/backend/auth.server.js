@@ -29,6 +29,8 @@ export async function startSession(userId) {
     [sid, userId, SESSION_SECONDS],
   );
   await query("DELETE FROM sessions WHERE expires_at < now()");
+  // Real sign-in history feeds the LMS activity card. A missing table must never block signing in.
+  await query("INSERT INTO login_events(user_id) VALUES($1)", [userId]).catch(() => {});
   const token = await new SignJWT({})
     .setProtectedHeader({ alg: "HS256" })
     .setJti(sid)

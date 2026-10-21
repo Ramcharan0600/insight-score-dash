@@ -195,17 +195,20 @@ export function checkEligibility(s, d) {
       result: s.backlogs <= d.maxBacklogs ? "Pass" : "Fail",
       detail: `${s.backlogs} active backlogs`,
     },
-    {
+  ];
+  // A drive open to every branch or graduating year simply leaves those fields empty.
+  if (d.branches?.length)
+    criteria.push({
       label: `Branch: ${d.branches.join("/")}`,
       result: d.branches.includes(s.branch) ? "Pass" : "Fail",
       detail: `Student branch ${s.branch}`,
-    },
-    {
+    });
+  if (d.gradYear)
+    criteria.push({
       label: `Graduation year ${d.gradYear}`,
       result: s.gradYear === d.gradYear ? "Pass" : "Fail",
       detail: `Student graduates ${s.gradYear}`,
-    },
-  ];
+    });
   if (d.requiresAssessment) {
     criteria.push({
       label: "Assessment completed",

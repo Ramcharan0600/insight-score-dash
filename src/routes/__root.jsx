@@ -87,14 +87,14 @@ export const Route = createRootRouteWithContext()({
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "Orbit — Campus Intelligence" },
+      { title: "BIB InsightIQ — Campus Intelligence" },
       {
         name: "description",
         content:
           "Turning campus data into student success. A TEAM BIB campus intelligence platform.",
       },
       { name: "author", content: "TEAM BIB" },
-      { property: "og:title", content: "Orbit — Campus Intelligence" },
+      { property: "og:title", content: "BIB InsightIQ — Campus Intelligence" },
       { property: "og:description", content: "Turning campus data into student success." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
@@ -108,7 +108,7 @@ export const Route = createRootRouteWithContext()({
       { rel: "icon", href: "/favicon.svg", type: "image/svg+xml" },
       {
         rel: "stylesheet",
-        href: "https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&display=swap",
+        href: "https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap",
       },
     ],
   }),

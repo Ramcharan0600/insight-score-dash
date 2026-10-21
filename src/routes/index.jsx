@@ -5,20 +5,18 @@ import { pageHead } from "@/lib/metadata";
 import {
   ArrowRight,
   ArrowUpRight,
-  Play,
   CircleCheck,
   Users,
   ScanLine,
   ClipboardCheck,
   ShieldCheck,
 } from "lucide-react";
-import campus from "@/assets/campus.jpg";
 import { SOURCES } from "./solution";
 export const Route = createFileRoute("/")({
   head: () =>
     pageHead(
       "Student Success Intelligence Platform",
-      "Turning campus data into student success. Discover seven connected data sources, explainable risk insights and timely mentor support with Orbit.",
+      "Turning campus data into student success. Discover seven connected data sources, explainable risk insights and timely mentor support with BIB InsightIQ.",
     ),
   component: Home,
 });
@@ -26,47 +24,106 @@ function Home() {
   return (
     <PublicLayout>
       <main>
-        <section className="campus-hero flex items-center">
-          <img
-            src={campus}
-            alt="Illustrative modern university campus with students walking between academic buildings"
-            width={1920}
-            height={1024}
-            fetchPriority="high"
-            className="absolute inset-0 -z-10 size-full object-cover object-center"
-          />
-          <div className="mx-auto w-full max-w-7xl px-5 py-16 lg:px-8">
-            <p className="mb-6 flex items-center gap-2 text-xs font-semibold text-hero-foreground">
-              <span className="size-2 rounded-full bg-primary" />
-              SMART CAMPUS. STRONGER FUTURES.
-            </p>
-            <h1 className="hero-heading max-w-3xl text-hero-foreground">Orbit</h1>
-            <p className="mt-5 max-w-xl font-display text-2xl leading-snug text-hero-foreground sm:text-3xl">
-              Turning campus data
-              <br />
-              into student success.
-            </p>
-            <p className="mt-6 max-w-lg text-base leading-relaxed text-hero-muted">
-              See the whole student story. Understand who needs help, why they are at risk, and what
-              to do next — before a small gap becomes a bigger challenge.
-            </p>
-            <div className="mt-8 flex flex-wrap gap-3">
-              <Button asChild size="lg">
-                <Link to="/auth">
-                  <Play className="size-4" />
-                  Log in to your workspace
-                </Link>
-              </Button>
-              <Button asChild size="lg" variant="secondary">
-                <Link to="/solution">
-                  How it works <ArrowUpRight />
-                </Link>
-              </Button>
+        <section className="relative overflow-hidden border-b bg-[radial-gradient(60rem_28rem_at_85%_-10%,var(--rose-pale),transparent)]">
+          <div className="mx-auto grid max-w-7xl items-center gap-12 px-5 py-16 lg:grid-cols-2 lg:px-8 lg:py-24">
+            <div>
+              <p className="eyebrow flex items-center gap-2">
+                <span className="size-2 rounded-full bg-primary" />
+                BIB INSIGHTIQ · STUDENT SUCCESS INTELLIGENCE
+              </p>
+              <h1 className="mt-5 font-display text-4xl font-extrabold leading-[1.1] text-foreground sm:text-5xl lg:text-6xl">
+                Turn Campus Data Into <span className="text-primary">Student Success.</span>
+              </h1>
+              <p className="mt-6 max-w-xl text-base leading-relaxed text-muted-foreground sm:text-lg">
+                Seven connected student data sources become one explainable Success Score, clear
+                risk reasons and a practical next step for every student, so mentors can act before
+                a small gap becomes a bigger challenge.
+              </p>
+              <div className="mt-8 flex flex-wrap gap-3">
+                <Button asChild size="lg">
+                  <Link to="/auth">
+                    Get Started / Login <ArrowRight />
+                  </Link>
+                </Button>
+                <Button asChild size="lg" variant="outline">
+                  <Link to="/solution">
+                    Explore Platform <ArrowUpRight />
+                  </Link>
+                </Button>
+              </div>
+              <p className="mt-6 flex items-center gap-2 text-xs text-muted-foreground">
+                <ShieldCheck className="size-4 text-primary" />
+                Explainable insights. Human-led support. Private by design.
+              </p>
             </div>
-            <p className="mt-6 flex items-center gap-2 text-xs text-hero-muted">
-              <ShieldCheck className="size-4" />
-              Explainable insights. Human-led support. Private by design.
-            </p>
+            <figure
+              aria-label="Illustrative preview of the Student Success Score"
+              className="relative"
+            >
+              <div className="surface relative z-10 p-5 shadow-lg">
+                <div className="flex items-center gap-5">
+                  <svg viewBox="0 0 100 100" className="size-24 shrink-0 -rotate-90" aria-hidden>
+                    <circle
+                      cx="50"
+                      cy="50"
+                      r="42"
+                      fill="none"
+                      stroke="var(--border)"
+                      strokeWidth="9"
+                    />
+                    <circle
+                      cx="50"
+                      cy="50"
+                      r="42"
+                      fill="none"
+                      stroke="var(--primary)"
+                      strokeWidth="9"
+                      strokeLinecap="round"
+                      strokeDasharray="264"
+                      strokeDashoffset="68"
+                    />
+                  </svg>
+                  <div>
+                    <p className="text-xs font-semibold uppercase text-label">Success Score</p>
+                    <p className="font-display text-4xl font-bold tabular-nums">74 / 100</p>
+                    <span className="mt-1 inline-flex items-center gap-1 rounded-full bg-warning/15 px-2 py-0.5 text-xs font-semibold text-warning">
+                      Monitor
+                    </span>
+                  </div>
+                </div>
+                <div className="mt-5 space-y-3">
+                  {[
+                    ["Academics", 82],
+                    ["Attendance", 71],
+                    ["LMS", 64],
+                    ["Placement", 58],
+                  ].map(([k, v]) => (
+                    <div key={k}>
+                      <div className="flex justify-between text-xs">
+                        <span>{k}</span>
+                        <span className="tabular-nums text-muted-foreground">{v}</span>
+                      </div>
+                      <div className="mt-1 h-1.5 overflow-hidden rounded-full bg-muted">
+                        <div
+                          className="h-full rounded-full bg-primary"
+                          style={{ width: `${v}%` }}
+                        />
+                      </div>
+                    </div>
+                  ))}
+                </div>
+                <p className="mt-4 rounded-lg bg-accent p-3 text-xs text-accent-foreground">
+                  Why flagged: attendance under 75% in 1 subject, placement readiness below 60%.
+                </p>
+              </div>
+              <div
+                aria-hidden
+                className="absolute -bottom-4 -right-3 h-full w-full rounded-[14px] border bg-rose-pale"
+              />
+              <figcaption className="relative z-10 mt-3 text-xs text-muted-foreground">
+                Illustrative preview, not a live student record.
+              </figcaption>
+            </figure>
           </div>
         </section>
         <section className="border-b bg-card">
@@ -96,7 +153,7 @@ function Home() {
             </div>
             <Button asChild variant="link">
               <Link to="/solution">
-                Why Orbit <ArrowRight />
+                Why BIB InsightIQ <ArrowRight />
               </Link>
             </Button>
           </div>
@@ -155,8 +212,8 @@ function Home() {
             </h2>
             <p className="mt-5 text-muted-foreground">
               A student with a strong CGPA but low attendance needs a different plan from a strong
-              coder with weak aptitude. Orbit connects the evidence so support is specific, not
-              generic.
+              coder with weak aptitude. BIB InsightIQ connects the evidence so support is specific,
+              not generic.
             </p>
             <Button asChild variant="outline" className="mt-6">
               <Link to="/auth">
@@ -199,7 +256,9 @@ function Home() {
           <div className="mx-auto flex max-w-7xl flex-wrap items-center justify-between gap-8 px-5 py-12 lg:px-8">
             <div>
               <p className="eyebrow">A BETTER PICTURE. A BETTER CONVERSATION.</p>
-              <h2 className="mt-3 text-3xl font-semibold">See your campus through Orbit.</h2>
+              <h2 className="mt-3 text-3xl font-semibold">
+                See your campus through BIB InsightIQ.
+              </h2>
               <p className="mt-3 text-muted-foreground">
                 Explore the experience, or connect with the people behind it.
               </p>

@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { useState } from "react";
 import { useAccount } from "@/lib/account";
 const links = [
-  { to: "/solution", text: "Why Orbit" },
+  { to: "/solution", text: "Why BIB InsightIQ" },
   { to: "/benefits", text: "For your campus" },
   { to: "/privacy", text: "Trust & privacy" },
   { to: "/contact", text: "Connect with us" },
@@ -17,7 +17,7 @@ export function Brand() {
         <Orbit className="size-6" />
       </span>
       <span className="font-display text-xl font-bold">
-        <span className="text-primary">Orbit</span>
+        <span className="text-primary">BIB InsightIQ</span>
       </span>
     </Link>
   );
@@ -88,7 +88,7 @@ export function PublicLayout({ children }) {
           <div className="space-y-3 text-sm">
             <p className="font-semibold">Discover</p>
             <Link to="/solution" className="block text-muted-foreground">
-              Why Orbit
+              Why BIB InsightIQ
             </Link>
             <Link to="/benefits" className="block text-muted-foreground">
               Campus benefits

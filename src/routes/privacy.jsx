@@ -6,7 +6,7 @@ export const Route = createFileRoute("/privacy")({
   head: () =>
     pageHead(
       "Trust & Privacy",
-      "How Orbit protects private records, supports responsible human review.",
+      "How BIB InsightIQ protects private records, supports responsible human review.",
     ),
   component: Privacy,
 });

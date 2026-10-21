@@ -60,7 +60,7 @@ export function CampusAssistant() {
                 <div>
                   <h3 className="text-lg font-semibold">Hello! Where would you like to begin?</h3>
                   <p className="mt-2 text-sm text-muted-foreground">
-                    Ask me about Orbit, student support, or your next destination.
+                    Ask me about BIB InsightIQ, student support, or your next destination.
                   </p>
                   <div className="mt-4 flex flex-col items-start gap-2">
                     {[
@@ -112,7 +112,7 @@ export function CampusAssistant() {
           <div className="border-t p-3">
             <div className="mb-3 flex gap-3 text-xs">
               <Link to="/solution" onClick={() => setOpen(false)} className="text-primary">
-                Why Orbit
+                Why BIB InsightIQ
               </Link>
               <Link to="/privacy" onClick={() => setOpen(false)} className="text-primary">
                 Privacy

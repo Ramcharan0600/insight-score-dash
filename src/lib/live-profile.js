@@ -28,6 +28,7 @@ export function liveNotifications(s, today = todayIso()) {
     if (p.status === "critical" || p.status === "warning")
       out.push({
         tone: p.status === "critical" ? "danger" : "warning",
+        key: `attendance:${sub.subject}:${p.status}`,
         area: "Attendance",
         text: `${sub.subject}: ${p.pct?.toFixed(1)}%`,
         tip: p.message,
@@ -37,6 +38,7 @@ export function liveNotifications(s, today = todayIso()) {
     if (a.daysLeft === null || a.daysLeft > 3) continue;
     out.push({
       tone: a.daysLeft < 0 ? "danger" : "warning",
+      key: `assignment:${a.subject}:${a.title}:${a.daysLeft < 0 ? "late" : "soon"}`,
       area: "Assignment",
       text:
         a.daysLeft < 0
@@ -49,6 +51,7 @@ export function liveNotifications(s, today = todayIso()) {
     if (sub.marks < 60)
       out.push({
         tone: "danger",
+        key: `marks:${sub.subject}`,
         area: "Academics",
         text: `${sub.subject} marks ${sub.marks}/100`,
         tip: "Book a doubt session with your teacher and revise the weakest topics.",
@@ -56,6 +59,7 @@ export function liveNotifications(s, today = todayIso()) {
   if (s.backlogs)
     out.push({
       tone: "danger",
+      key: `backlogs:${s.backlogs}`,
       area: "Academics",
       text: `${s.backlogs} backlog(s) pending`,
       tip: "Register for the next re-examination and follow your recovery plan.",
@@ -63,6 +67,7 @@ export function liveNotifications(s, today = todayIso()) {
   if (s.skills.aptitude >= 0 && s.skills.aptitude < 60)
     out.push({
       tone: "warning",
+      key: "skills:aptitude",
       area: "Skills",
       text: `Aptitude ${s.skills.aptitude}/100`,
       tip: "Practise aptitude questions regularly.",
@@ -70,6 +75,7 @@ export function liveNotifications(s, today = todayIso()) {
   for (const f of integrityFlags(s))
     out.push({
       tone: "warning",
+      key: `engagement:${f.detail}`,
       area: "Engagement",
       text: f.detail,
       tip: "Share evidence with your mentor for review.",
@@ -81,6 +87,7 @@ export function liveNotifications(s, today = todayIso()) {
   if (missing.length)
     out.push({
       tone: "info",
+      key: `data:${missing.join(",")}`,
       area: "Data",
       text: `Not recorded yet: ${missing.join(", ")}`,
       tip: "Ask your teacher or administrator to add these. Missing data is never treated as zero.",

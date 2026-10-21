@@ -13,7 +13,7 @@ export const Route = createFileRoute("/contact")({
   head: () =>
     pageHead(
       "Connect With Us",
-      "Contact TEAM BIB about campus analytics, collaboration and Orbit.",
+      "Contact TEAM BIB about campus analytics, collaboration and BIB InsightIQ.",
     ),
   component: Contact,
 });
@@ -79,7 +79,7 @@ function Contact() {
             </p>
             <Button asChild variant="outline" className="mt-6">
               <Link to="/solution">
-                Why Orbit <ArrowUpRight />
+                Why BIB InsightIQ <ArrowUpRight />
               </Link>
             </Button>
           </div>

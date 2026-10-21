@@ -6,7 +6,8 @@ import { resetPasswordWithToken } from "@/lib/auth.functions";
 
 export const Route = createFileRoute("/new-password")({
   validateSearch: (search) => ({ token: typeof search.token === "string" ? search.token : "" }),
-  head: () => pageHead("Choose a new password", "Choose a new password for your Orbit account."),
+  head: () =>
+    pageHead("Choose a new password", "Choose a new password for your BIB InsightIQ account."),
   component: NewPassword,
 });
 
@@ -52,7 +53,7 @@ function NewPassword() {
           <span className="brand-mark !size-12 !rounded-2xl">
             <Orbit className="size-7" />
           </span>
-          <p className="font-display text-4xl font-bold text-primary">Orbit</p>
+          <p className="font-display text-4xl font-bold text-primary">BIB InsightIQ</p>
         </div>
         <div className="rounded-3xl border bg-card p-7 shadow-sm">
           {done ? (

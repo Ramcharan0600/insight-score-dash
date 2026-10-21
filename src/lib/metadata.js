@@ -1,5 +1,5 @@
 export function pageHead(title, description) {
-  const full = `${title} — Orbit`;
+  const full = `${title} — BIB InsightIQ`;
   return {
     meta: [
       { title: full },
