@@ -22,18 +22,17 @@ export function attendanceMarks(pct) {
   for (const b of ATTENDANCE_BANDS) if (pct >= b.min) return b.marks;
   return 0;
 }
-// Classes required to reach target% (must attend every future class)
+// Classes required to reach target% (must attend every future class). Integer arithmetic keeps
+// results exact: (attended + x) / (held + x) >= target / 100  =>  x >= (target*held - 100*attended) / (100 - target)
 export function classesNeededForTarget(attended, held, target) {
-  const t = target / 100;
-  if (attended / held >= t) return 0;
-  // (attended + x) / (held + x) >= t  =>  x >= (t*held - attended) / (1 - t)
-  return Math.max(0, Math.ceil((t * held - attended) / (1 - t)));
+  if (attended * 100 >= target * held) return 0;
+  if (target >= 100) return Infinity;
+  return Math.ceil((target * held - 100 * attended) / (100 - target));
 }
-// Max additional classes that can be missed while staying >= target
+// Max additional classes that can be missed while staying >= target:
+// attended / (held + x) >= target / 100  =>  x <= (100*attended - target*held) / target
 export function maxMissableClasses(attended, held, target) {
-  const t = target / 100;
-  // attended / (held + x) >= t  =>  x <= attended/t - held
-  return Math.max(0, Math.floor(attended / t - held));
+  return Math.max(0, Math.floor((100 * attended - target * held) / target));
 }
 // ---------- LMS ----------
 export function lmsCompletion(s) {

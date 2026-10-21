@@ -6,6 +6,12 @@ import { BandBadge, EmptyState, ScoreRing, SectionTitle, StatCard } from "@/comp
 import { Academics } from "@/components/student-profile/shared";
 import { OverviewHub } from "@/components/portal/OverviewHub";
 import { ScoreInsights } from "@/components/portal/ScoreInsights";
+import {
+  GoalProgress,
+  PlacementSnapshot,
+  RecommendedActions,
+} from "@/components/portal/StudentDashboardCards";
+import { AdminAnalytics } from "@/components/portal/AdminAnalytics";
 import { CampusInsights } from "@/components/portal/CampusInsights";
 import { Banner, BannerStat, PageTitle } from "@/components/portal/PortalShell";
 import { pct } from "@/components/portal/StudentTable";
@@ -190,6 +196,11 @@ function StudentHome() {
           </div>
         </div>
       </div>
+      <div className="mt-4 grid gap-4 lg:grid-cols-3">
+        <RecommendedActions s={s} today={today} />
+        <PlacementSnapshot s={s} />
+        <GoalProgress s={s} />
+      </div>
       <div className="mt-6">
         <ScoreInsights s={s} />
       </div>
@@ -333,9 +344,6 @@ function FacultyHome() {
 // ---------------------------------------------------------------- admin
 function AdminHome() {
   const { profile, rows, summary } = useCampus();
-  const [branch, setBranch] = useState("");
-  const scopedRows = branch ? rows.filter((r) => r.branch === branch) : rows;
-  const branchNames = [...new Set(rows.map((r) => r.branch))].sort();
   const first = firstName(profile.display_name);
   const branches = [...new Set(rows.map((r) => r.branch))].sort().map((b) => {
     const list = rows.filter((r) => r.branch === b);
@@ -364,26 +372,6 @@ function AdminHome() {
         <BannerStat label="Need help" value={String(summary.atRisk)} />
       </Banner>
       <OverviewHub />
-      {branchNames.length > 1 && (
-        <div className="mb-3 flex items-center gap-2 text-sm">
-          <label htmlFor="home-branch" className="text-muted-foreground">
-            Averages and insights for
-          </label>
-          <select
-            id="home-branch"
-            value={branch}
-            onChange={(e) => setBranch(e.target.value)}
-            className="rounded-md border bg-card px-3 py-1.5 text-sm"
-          >
-            <option value="">All branches</option>
-            {branchNames.map((b) => (
-              <option key={b} value={b}>
-                {b}
-              </option>
-            ))}
-          </select>
-        </div>
-      )}
       <div className="grid grid-cols-2 gap-3 md:grid-cols-4">
         <StatCard
           label="Students"
@@ -408,7 +396,7 @@ function AdminHome() {
         />
       </div>
 
-      <AcademicStats rows={scopedRows} />
+      <AcademicStats rows={rows} />
 
       {(summary.unassigned > 0 || summary.noData > 0) && (
         <div className="mt-4 rounded-xl border border-dashed p-4 text-sm">
@@ -518,7 +506,7 @@ function AdminHome() {
           )}
         </div>
       </div>
-      <CampusInsights rows={scopedRows} />
+      <AdminAnalytics />
     </div>
   );
 }
