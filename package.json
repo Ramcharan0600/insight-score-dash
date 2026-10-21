@@ -15,7 +15,8 @@
     "db:migrate": "node --env-file-if-exists=.env scripts/migrate.js",
     "db:set-role": "node --env-file-if-exists=.env scripts/set-role.js",
     "db:seed-demo": "node --env-file-if-exists=.env scripts/seed-demo.js",
-    "db:check": "node --env-file-if-exists=.env scripts/db-check.js"
+    "db:check": "node --env-file-if-exists=.env scripts/db-check.js",
+    "whatsapp:chat": "node --env-file-if-exists=.env scripts/whatsapp-chat.js"
   },
   "overrides": {
     "rolldown": "1.2.1"

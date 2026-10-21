@@ -10,6 +10,10 @@ export default defineConfig(({ command, mode }) => {
   for (const [k, val] of Object.entries(loadEnv(mode, process.cwd(), ""))) process.env[k] ??= val;
   return {
     resolve: { alias: { "@": path.resolve(import.meta.dirname, "src") } },
+    // Lets a tunnel (ngrok, Cloudflare) reach the dev server so Twilio can call the WhatsApp webhook.
+    server: {
+      allowedHosts: [".ngrok-free.dev", ".ngrok-free.app", ".ngrok.app", ".trycloudflare.com"],
+    },
     plugins: [
       tanstackStart({
         server: { entry: "server" },

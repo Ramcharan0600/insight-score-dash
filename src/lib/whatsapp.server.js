@@ -31,8 +31,9 @@ export async function handleWhatsApp(request) {
       handleMessage(db, { from, body: params["Body"] ?? "" }),
     );
     return xmlResponse(reply);
-  } catch {
-    // Never echo internals into a chat.
+  } catch (error) {
+    // Details go to the server log only; never echo internals into a chat.
+    console.error("WhatsApp bot error:", error instanceof Error ? error.message : error);
     return xmlResponse("Something went wrong on our side. Please try again in a moment.");
   }
 }
